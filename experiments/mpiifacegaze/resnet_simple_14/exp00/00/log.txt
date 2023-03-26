@@ -1,0 +1,347 @@
+[32m[2022-04-09 20:50:17] __main__ INFO: [0mmode: MPIIFaceGaze
+dataset:
+  dataset_dir: datasets/MPIIFaceGaze.h5
+transform:
+  mpiifacegaze_face_size: 224
+  mpiifacegaze_gray: False
+device: cuda
+model:
+  name: resnet_simple
+  backbone:
+    name: resnet_simple
+    pretrained: resnet18
+    resnet_block: basic
+    resnet_layers: [2, 2, 2]
+train:
+  batch_size: 32
+  optimizer: sgd
+  base_lr: 0.1
+  momentum: 0.9
+  nesterov: True
+  weight_decay: 0.0001
+  no_weight_decay_on_bn: False
+  loss: L1
+  seed: 0
+  val_first: True
+  val_period: 1
+  test_id: 0
+  val_ratio: 0.1
+  output_dir: experiments/mpiifacegaze/resnet_simple_14/exp00
+  log_period: 100
+  checkpoint_period: 5
+  use_tensorboard: True
+  train_dataloader:
+    num_workers: 2
+    drop_last: True
+    pin_memory: False
+  val_dataloader:
+    num_workers: 2
+    pin_memory: False
+tensorboard:
+  train_images: False
+  val_images: False
+  model_params: False
+optim:
+  adam:
+    betas: (0.9, 0.999)
+scheduler:
+  epochs: 15
+  type: multistep
+  milestones: [10, 13]
+  lr_decay: 0.1
+  lr_min_factor: 0.001
+test:
+  test_id: 0
+  checkpoint: ''
+  output_dir: ''
+  batch_size: 256
+  dataloader:
+    num_workers: 2
+    pin_memory: False
+face_detector:
+  mode: dlib
+  dlib:
+    model: data/dlib/shape_predictor_68_face_landmarks.dat
+gaze_estimator:
+  checkpoint: ''
+  camera_params: ''
+  normalized_camera_params: data/calib/normalized_camera_params_eye.yaml
+  normalized_camera_distance: 0.6
+demo:
+  use_camera: True
+  display_on_screen: True
+  wait_time: 1
+  video_path: ''
+  output_dir: ''
+  output_file_extension: mp4
+  head_pose_axis_length: 0.05
+  gaze_visualization_length: 0.05
+  show_bbox: True
+  show_head_pose: True
+  show_landmarks: True
+  show_normalized_image: False
+  show_template_model: False
+cudnn:
+  benchmark: True
+  deterministic: False
+[32m[2022-04-09 20:50:20] __main__ INFO: [0mVal 0
+[32m[2022-04-09 20:50:25] __main__ INFO: [0mEpoch 0 loss 0.1626 angle error 14.46
+[32m[2022-04-09 20:50:25] __main__ INFO: [0mElapsed 5.33
+[32m[2022-04-09 20:50:25] __main__ INFO: [0mTrain 1
+[32m[2022-04-09 20:50:27] __main__ INFO: [0mEpoch 1 Step 0/1181 lr 0.100000 loss 0.1652 (0.1652) angle error 14.62 (14.62)
+[32m[2022-04-09 20:50:44] __main__ INFO: [0mEpoch 1 Step 100/1181 lr 0.100000 loss 0.1421 (0.1583) angle error 12.57 (13.63)
+[32m[2022-04-09 20:51:05] __main__ INFO: [0mEpoch 1 Step 200/1181 lr 0.100000 loss 0.1126 (0.1414) angle error 10.06 (12.33)
+[32m[2022-04-09 20:51:27] __main__ INFO: [0mEpoch 1 Step 300/1181 lr 0.100000 loss 0.1260 (0.1338) angle error 11.11 (11.74)
+[32m[2022-04-09 20:51:52] __main__ INFO: [0mEpoch 1 Step 400/1181 lr 0.100000 loss 0.1017 (0.1286) angle error 9.04 (11.32)
+[32m[2022-04-09 20:52:19] __main__ INFO: [0mEpoch 1 Step 500/1181 lr 0.100000 loss 0.0769 (0.1234) angle error 6.71 (10.88)
+[32m[2022-04-09 20:52:47] __main__ INFO: [0mEpoch 1 Step 600/1181 lr 0.100000 loss 0.0729 (0.1173) angle error 6.61 (10.35)
+[32m[2022-04-09 20:53:13] __main__ INFO: [0mEpoch 1 Step 700/1181 lr 0.100000 loss 0.0631 (0.1110) angle error 5.55 (9.81)
+[32m[2022-04-09 20:53:40] __main__ INFO: [0mEpoch 1 Step 800/1181 lr 0.100000 loss 0.0451 (0.1049) angle error 4.02 (9.28)
+[32m[2022-04-09 20:54:08] __main__ INFO: [0mEpoch 1 Step 900/1181 lr 0.100000 loss 0.0609 (0.0999) angle error 5.50 (8.83)
+[32m[2022-04-09 20:54:38] __main__ INFO: [0mEpoch 1 Step 1000/1181 lr 0.100000 loss 0.0516 (0.0955) angle error 4.80 (8.45)
+[32m[2022-04-09 20:55:13] __main__ INFO: [0mEpoch 1 Step 1100/1181 lr 0.100000 loss 0.0490 (0.0914) angle error 4.21 (8.09)
+[32m[2022-04-09 20:55:46] __main__ INFO: [0mElapsed 320.36
+[32m[2022-04-09 20:55:46] __main__ INFO: [0mVal 1
+[32m[2022-04-09 20:55:52] __main__ INFO: [0mEpoch 1 loss 0.0652 angle error 5.82
+[32m[2022-04-09 20:55:52] __main__ INFO: [0mElapsed 6.34
+[32m[2022-04-09 20:55:52] __main__ INFO: [0mTrain 2
+[32m[2022-04-09 20:55:52] __main__ INFO: [0mEpoch 2 Step 0/1181 lr 0.100000 loss 0.0576 (0.0576) angle error 5.15 (5.15)
+[32m[2022-04-09 20:56:11] __main__ INFO: [0mEpoch 2 Step 100/1181 lr 0.100000 loss 0.0543 (0.0485) angle error 4.95 (4.31)
+[32m[2022-04-09 20:56:31] __main__ INFO: [0mEpoch 2 Step 200/1181 lr 0.100000 loss 0.0409 (0.0475) angle error 3.74 (4.22)
+[32m[2022-04-09 20:56:52] __main__ INFO: [0mEpoch 2 Step 300/1181 lr 0.100000 loss 0.0579 (0.0477) angle error 5.19 (4.23)
+[32m[2022-04-09 20:57:10] __main__ INFO: [0mEpoch 2 Step 400/1181 lr 0.100000 loss 0.0406 (0.0473) angle error 3.64 (4.20)
+[32m[2022-04-09 20:57:29] __main__ INFO: [0mEpoch 2 Step 500/1181 lr 0.100000 loss 0.0320 (0.0465) angle error 2.81 (4.14)
+[32m[2022-04-09 20:57:47] __main__ INFO: [0mEpoch 2 Step 600/1181 lr 0.100000 loss 0.0382 (0.0458) angle error 3.52 (4.07)
+[32m[2022-04-09 20:58:08] __main__ INFO: [0mEpoch 2 Step 700/1181 lr 0.100000 loss 0.0343 (0.0455) angle error 3.16 (4.05)
+[32m[2022-04-09 20:58:32] __main__ INFO: [0mEpoch 2 Step 800/1181 lr 0.100000 loss 0.0396 (0.0451) angle error 3.63 (4.01)
+[32m[2022-04-09 20:58:56] __main__ INFO: [0mEpoch 2 Step 900/1181 lr 0.100000 loss 0.0487 (0.0448) angle error 4.35 (3.98)
+[32m[2022-04-09 20:59:23] __main__ INFO: [0mEpoch 2 Step 1000/1181 lr 0.100000 loss 0.0351 (0.0446) angle error 3.07 (3.96)
+[32m[2022-04-09 20:59:56] __main__ INFO: [0mEpoch 2 Step 1100/1181 lr 0.100000 loss 0.0307 (0.0443) angle error 2.75 (3.94)
+[32m[2022-04-09 21:00:27] __main__ INFO: [0mElapsed 274.63
+[32m[2022-04-09 21:00:27] __main__ INFO: [0mVal 2
+[32m[2022-04-09 21:01:08] __main__ INFO: [0mEpoch 2 loss 0.0425 angle error 3.79
+[32m[2022-04-09 21:01:08] __main__ INFO: [0mElapsed 41.44
+[32m[2022-04-09 21:01:08] __main__ INFO: [0mTrain 3
+[32m[2022-04-09 21:01:08] __main__ INFO: [0mEpoch 3 Step 0/1181 lr 0.100000 loss 0.0468 (0.0468) angle error 4.16 (4.16)
+[32m[2022-04-09 21:01:20] __main__ INFO: [0mEpoch 3 Step 100/1181 lr 0.100000 loss 0.0460 (0.0415) angle error 4.05 (3.67)
+[32m[2022-04-09 21:01:33] __main__ INFO: [0mEpoch 3 Step 200/1181 lr 0.100000 loss 0.0299 (0.0410) angle error 2.66 (3.63)
+[32m[2022-04-09 21:01:47] __main__ INFO: [0mEpoch 3 Step 300/1181 lr 0.100000 loss 0.0291 (0.0408) angle error 2.59 (3.62)
+[32m[2022-04-09 21:02:01] __main__ INFO: [0mEpoch 3 Step 400/1181 lr 0.100000 loss 0.0438 (0.0405) angle error 3.76 (3.59)
+[32m[2022-04-09 21:02:16] __main__ INFO: [0mEpoch 3 Step 500/1181 lr 0.100000 loss 0.0439 (0.0402) angle error 3.87 (3.57)
+[32m[2022-04-09 21:02:31] __main__ INFO: [0mEpoch 3 Step 600/1181 lr 0.100000 loss 0.0378 (0.0401) angle error 3.26 (3.56)
+[32m[2022-04-09 21:02:49] __main__ INFO: [0mEpoch 3 Step 700/1181 lr 0.100000 loss 0.0369 (0.0399) angle error 3.42 (3.54)
+[32m[2022-04-09 21:03:09] __main__ INFO: [0mEpoch 3 Step 800/1181 lr 0.100000 loss 0.0412 (0.0398) angle error 3.55 (3.54)
+[32m[2022-04-09 21:03:29] __main__ INFO: [0mEpoch 3 Step 900/1181 lr 0.100000 loss 0.0398 (0.0397) angle error 3.54 (3.53)
+[32m[2022-04-09 21:03:53] __main__ INFO: [0mEpoch 3 Step 1000/1181 lr 0.100000 loss 0.0285 (0.0397) angle error 2.51 (3.52)
+[32m[2022-04-09 21:04:18] __main__ INFO: [0mEpoch 3 Step 1100/1181 lr 0.100000 loss 0.0376 (0.0396) angle error 3.38 (3.52)
+[32m[2022-04-09 21:04:41] __main__ INFO: [0mElapsed 212.99
+[32m[2022-04-09 21:04:41] __main__ INFO: [0mVal 3
+[32m[2022-04-09 21:05:22] __main__ INFO: [0mEpoch 3 loss 0.0540 angle error 4.79
+[32m[2022-04-09 21:05:22] __main__ INFO: [0mElapsed 40.79
+[32m[2022-04-09 21:05:22] __main__ INFO: [0mTrain 4
+[32m[2022-04-09 21:05:22] __main__ INFO: [0mEpoch 4 Step 0/1181 lr 0.100000 loss 0.0452 (0.0452) angle error 4.02 (4.02)
+[32m[2022-04-09 21:05:31] __main__ INFO: [0mEpoch 4 Step 100/1181 lr 0.100000 loss 0.0307 (0.0392) angle error 2.84 (3.48)
+[32m[2022-04-09 21:05:40] __main__ INFO: [0mEpoch 4 Step 200/1181 lr 0.100000 loss 0.0455 (0.0381) angle error 4.02 (3.38)
+[32m[2022-04-09 21:05:50] __main__ INFO: [0mEpoch 4 Step 300/1181 lr 0.100000 loss 0.0347 (0.0378) angle error 3.09 (3.36)
+[32m[2022-04-09 21:06:02] __main__ INFO: [0mEpoch 4 Step 400/1181 lr 0.100000 loss 0.0351 (0.0381) angle error 3.15 (3.38)
+[32m[2022-04-09 21:06:15] __main__ INFO: [0mEpoch 4 Step 500/1181 lr 0.100000 loss 0.0325 (0.0382) angle error 2.83 (3.38)
+[32m[2022-04-09 21:06:28] __main__ INFO: [0mEpoch 4 Step 600/1181 lr 0.100000 loss 0.0415 (0.0384) angle error 3.73 (3.40)
+[32m[2022-04-09 21:06:44] __main__ INFO: [0mEpoch 4 Step 700/1181 lr 0.100000 loss 0.0288 (0.0382) angle error 2.54 (3.39)
+[32m[2022-04-09 21:07:01] __main__ INFO: [0mEpoch 4 Step 800/1181 lr 0.100000 loss 0.0353 (0.0380) angle error 3.08 (3.37)
+[32m[2022-04-09 21:07:21] __main__ INFO: [0mEpoch 4 Step 900/1181 lr 0.100000 loss 0.0451 (0.0381) angle error 3.91 (3.38)
+[32m[2022-04-09 21:07:45] __main__ INFO: [0mEpoch 4 Step 1000/1181 lr 0.100000 loss 0.0347 (0.0381) angle error 3.11 (3.38)
+[32m[2022-04-09 21:08:12] __main__ INFO: [0mEpoch 4 Step 1100/1181 lr 0.100000 loss 0.0299 (0.0381) angle error 2.64 (3.38)
+[32m[2022-04-09 21:08:35] __main__ INFO: [0mElapsed 193.35
+[32m[2022-04-09 21:08:35] __main__ INFO: [0mVal 4
+[32m[2022-04-09 21:08:41] __main__ INFO: [0mEpoch 4 loss 0.0381 angle error 3.39
+[32m[2022-04-09 21:08:41] __main__ INFO: [0mElapsed 5.92
+[32m[2022-04-09 21:08:41] __main__ INFO: [0mTrain 5
+[32m[2022-04-09 21:08:41] __main__ INFO: [0mEpoch 5 Step 0/1181 lr 0.100000 loss 0.0417 (0.0417) angle error 3.77 (3.77)
+[32m[2022-04-09 21:08:49] __main__ INFO: [0mEpoch 5 Step 100/1181 lr 0.100000 loss 0.0252 (0.0368) angle error 2.25 (3.26)
+[32m[2022-04-09 21:08:57] __main__ INFO: [0mEpoch 5 Step 200/1181 lr 0.100000 loss 0.0287 (0.0372) angle error 2.61 (3.29)
+[32m[2022-04-09 21:09:05] __main__ INFO: [0mEpoch 5 Step 300/1181 lr 0.100000 loss 0.0454 (0.0377) angle error 4.04 (3.34)
+[32m[2022-04-09 21:09:15] __main__ INFO: [0mEpoch 5 Step 400/1181 lr 0.100000 loss 0.0316 (0.0377) angle error 2.72 (3.34)
+[32m[2022-04-09 21:09:25] __main__ INFO: [0mEpoch 5 Step 500/1181 lr 0.100000 loss 0.0271 (0.0376) angle error 2.39 (3.33)
+[32m[2022-04-09 21:09:36] __main__ INFO: [0mEpoch 5 Step 600/1181 lr 0.100000 loss 0.0291 (0.0374) angle error 2.66 (3.31)
+[32m[2022-04-09 21:09:51] __main__ INFO: [0mEpoch 5 Step 700/1181 lr 0.100000 loss 0.0241 (0.0374) angle error 2.18 (3.32)
+[32m[2022-04-09 21:10:06] __main__ INFO: [0mEpoch 5 Step 800/1181 lr 0.100000 loss 0.0331 (0.0375) angle error 2.96 (3.33)
+[32m[2022-04-09 21:10:25] __main__ INFO: [0mEpoch 5 Step 900/1181 lr 0.100000 loss 0.0243 (0.0376) angle error 2.13 (3.33)
+[32m[2022-04-09 21:10:48] __main__ INFO: [0mEpoch 5 Step 1000/1181 lr 0.100000 loss 0.0405 (0.0375) angle error 3.68 (3.32)
+[32m[2022-04-09 21:11:15] __main__ INFO: [0mEpoch 5 Step 1100/1181 lr 0.100000 loss 0.0395 (0.0374) angle error 3.46 (3.31)
+[32m[2022-04-09 21:11:41] __main__ INFO: [0mElapsed 179.79
+[32m[2022-04-09 21:11:41] __main__ INFO: [0mVal 5
+[32m[2022-04-09 21:12:50] __main__ INFO: [0mEpoch 5 loss 0.0406 angle error 3.54
+[32m[2022-04-09 21:12:50] __main__ INFO: [0mElapsed 68.57
+[32m[2022-04-09 21:12:50] fvcore.common.checkpoint INFO: [0mSaving checkpoint to experiments/mpiifacegaze/resnet_simple_14/exp00/00/checkpoint_0005.pth
+[32m[2022-04-09 21:12:50] __main__ INFO: [0mTrain 6
+[32m[2022-04-09 21:12:51] __main__ INFO: [0mEpoch 6 Step 0/1181 lr 0.100000 loss 0.0378 (0.0378) angle error 3.37 (3.37)
+[32m[2022-04-09 21:13:01] __main__ INFO: [0mEpoch 6 Step 100/1181 lr 0.100000 loss 0.0295 (0.0361) angle error 2.70 (3.20)
+[32m[2022-04-09 21:13:11] __main__ INFO: [0mEpoch 6 Step 200/1181 lr 0.100000 loss 0.0337 (0.0369) angle error 3.04 (3.27)
+[32m[2022-04-09 21:13:23] __main__ INFO: [0mEpoch 6 Step 300/1181 lr 0.100000 loss 0.0281 (0.0369) angle error 2.65 (3.27)
+[32m[2022-04-09 21:13:36] __main__ INFO: [0mEpoch 6 Step 400/1181 lr 0.100000 loss 0.0361 (0.0370) angle error 3.07 (3.27)
+[32m[2022-04-09 21:13:50] __main__ INFO: [0mEpoch 6 Step 500/1181 lr 0.100000 loss 0.0594 (0.0367) angle error 5.15 (3.25)
+[32m[2022-04-09 21:14:05] __main__ INFO: [0mEpoch 6 Step 600/1181 lr 0.100000 loss 0.0339 (0.0368) angle error 3.02 (3.26)
+[32m[2022-04-09 21:14:22] __main__ INFO: [0mEpoch 6 Step 700/1181 lr 0.100000 loss 0.0411 (0.0367) angle error 3.77 (3.26)
+[32m[2022-04-09 21:14:41] __main__ INFO: [0mEpoch 6 Step 800/1181 lr 0.100000 loss 0.0490 (0.0368) angle error 4.19 (3.27)
+[32m[2022-04-09 21:15:03] __main__ INFO: [0mEpoch 6 Step 900/1181 lr 0.100000 loss 0.0455 (0.0368) angle error 3.97 (3.26)
+[32m[2022-04-09 21:15:33] __main__ INFO: [0mEpoch 6 Step 1000/1181 lr 0.100000 loss 0.0397 (0.0368) angle error 3.58 (3.26)
+[32m[2022-04-09 21:16:04] __main__ INFO: [0mEpoch 6 Step 1100/1181 lr 0.100000 loss 0.0337 (0.0367) angle error 2.96 (3.25)
+[32m[2022-04-09 21:16:30] __main__ INFO: [0mElapsed 220.00
+[32m[2022-04-09 21:16:30] __main__ INFO: [0mVal 6
+[32m[2022-04-09 21:16:36] __main__ INFO: [0mEpoch 6 loss 0.0388 angle error 3.51
+[32m[2022-04-09 21:16:36] __main__ INFO: [0mElapsed 6.33
+[32m[2022-04-09 21:16:36] __main__ INFO: [0mTrain 7
+[32m[2022-04-09 21:16:37] __main__ INFO: [0mEpoch 7 Step 0/1181 lr 0.100000 loss 0.0351 (0.0351) angle error 3.12 (3.12)
+[32m[2022-04-09 21:16:45] __main__ INFO: [0mEpoch 7 Step 100/1181 lr 0.100000 loss 0.0316 (0.0358) angle error 2.87 (3.17)
+[32m[2022-04-09 21:16:54] __main__ INFO: [0mEpoch 7 Step 200/1181 lr 0.100000 loss 0.0346 (0.0361) angle error 3.07 (3.20)
+[32m[2022-04-09 21:17:09] __main__ INFO: [0mEpoch 7 Step 300/1181 lr 0.100000 loss 0.0378 (0.0362) angle error 3.27 (3.21)
+[32m[2022-04-09 21:17:22] __main__ INFO: [0mEpoch 7 Step 400/1181 lr 0.100000 loss 0.0397 (0.0361) angle error 3.45 (3.20)
+[32m[2022-04-09 21:17:34] __main__ INFO: [0mEpoch 7 Step 500/1181 lr 0.100000 loss 0.0341 (0.0365) angle error 2.98 (3.24)
+[32m[2022-04-09 21:17:47] __main__ INFO: [0mEpoch 7 Step 600/1181 lr 0.100000 loss 0.0469 (0.0366) angle error 4.05 (3.25)
+[32m[2022-04-09 21:18:02] __main__ INFO: [0mEpoch 7 Step 700/1181 lr 0.100000 loss 0.0309 (0.0364) angle error 2.79 (3.23)
+[32m[2022-04-09 21:18:19] __main__ INFO: [0mEpoch 7 Step 800/1181 lr 0.100000 loss 0.0468 (0.0364) angle error 4.12 (3.23)
+[32m[2022-04-09 21:18:47] __main__ INFO: [0mEpoch 7 Step 900/1181 lr 0.100000 loss 0.0379 (0.0365) angle error 3.35 (3.24)
+[32m[2022-04-09 21:19:10] __main__ INFO: [0mEpoch 7 Step 1000/1181 lr 0.100000 loss 0.0386 (0.0367) angle error 3.47 (3.25)
+[32m[2022-04-09 21:19:36] __main__ INFO: [0mEpoch 7 Step 1100/1181 lr 0.100000 loss 0.0301 (0.0367) angle error 2.65 (3.25)
+[32m[2022-04-09 21:19:58] __main__ INFO: [0mElapsed 201.95
+[32m[2022-04-09 21:19:58] __main__ INFO: [0mVal 7
+[32m[2022-04-09 21:20:16] __main__ INFO: [0mEpoch 7 loss 0.0300 angle error 2.67
+[32m[2022-04-09 21:20:16] __main__ INFO: [0mElapsed 17.71
+[32m[2022-04-09 21:20:16] __main__ INFO: [0mTrain 8
+[32m[2022-04-09 21:20:16] __main__ INFO: [0mEpoch 8 Step 0/1181 lr 0.100000 loss 0.0284 (0.0284) angle error 2.49 (2.49)
+[32m[2022-04-09 21:20:26] __main__ INFO: [0mEpoch 8 Step 100/1181 lr 0.100000 loss 0.0310 (0.0381) angle error 2.70 (3.38)
+[32m[2022-04-09 21:20:36] __main__ INFO: [0mEpoch 8 Step 200/1181 lr 0.100000 loss 0.0333 (0.0378) angle error 2.96 (3.34)
+[32m[2022-04-09 21:20:46] __main__ INFO: [0mEpoch 8 Step 300/1181 lr 0.100000 loss 0.0300 (0.0373) angle error 2.71 (3.30)
+[32m[2022-04-09 21:20:56] __main__ INFO: [0mEpoch 8 Step 400/1181 lr 0.100000 loss 0.0355 (0.0367) angle error 3.09 (3.25)
+[32m[2022-04-09 21:21:08] __main__ INFO: [0mEpoch 8 Step 500/1181 lr 0.100000 loss 0.0366 (0.0366) angle error 3.29 (3.24)
+[32m[2022-04-09 21:21:21] __main__ INFO: [0mEpoch 8 Step 600/1181 lr 0.100000 loss 0.0298 (0.0364) angle error 2.65 (3.23)
+[32m[2022-04-09 21:21:36] __main__ INFO: [0mEpoch 8 Step 700/1181 lr 0.100000 loss 0.0315 (0.0363) angle error 2.83 (3.22)
+[32m[2022-04-09 21:21:54] __main__ INFO: [0mEpoch 8 Step 800/1181 lr 0.100000 loss 0.0386 (0.0363) angle error 3.38 (3.22)
+[32m[2022-04-09 21:22:15] __main__ INFO: [0mEpoch 8 Step 900/1181 lr 0.100000 loss 0.0344 (0.0361) angle error 3.08 (3.20)
+[32m[2022-04-09 21:22:42] __main__ INFO: [0mEpoch 8 Step 1000/1181 lr 0.100000 loss 0.0391 (0.0361) angle error 3.37 (3.20)
+[32m[2022-04-09 21:23:13] __main__ INFO: [0mEpoch 8 Step 1100/1181 lr 0.100000 loss 0.0417 (0.0361) angle error 3.64 (3.20)
+[32m[2022-04-09 21:23:37] __main__ INFO: [0mElapsed 200.93
+[32m[2022-04-09 21:23:37] __main__ INFO: [0mVal 8
+[32m[2022-04-09 21:24:30] __main__ INFO: [0mEpoch 8 loss 0.0328 angle error 2.93
+[32m[2022-04-09 21:24:30] __main__ INFO: [0mElapsed 52.97
+[32m[2022-04-09 21:24:30] __main__ INFO: [0mTrain 9
+[32m[2022-04-09 21:24:30] __main__ INFO: [0mEpoch 9 Step 0/1181 lr 0.100000 loss 0.0324 (0.0324) angle error 2.90 (2.90)
+[32m[2022-04-09 21:24:39] __main__ INFO: [0mEpoch 9 Step 100/1181 lr 0.100000 loss 0.0392 (0.0356) angle error 3.58 (3.17)
+[32m[2022-04-09 21:24:49] __main__ INFO: [0mEpoch 9 Step 200/1181 lr 0.100000 loss 0.0259 (0.0356) angle error 2.26 (3.17)
+[32m[2022-04-09 21:24:59] __main__ INFO: [0mEpoch 9 Step 300/1181 lr 0.100000 loss 0.0462 (0.0363) angle error 4.05 (3.22)
+[32m[2022-04-09 21:25:10] __main__ INFO: [0mEpoch 9 Step 400/1181 lr 0.100000 loss 0.0261 (0.0363) angle error 2.38 (3.22)
+[32m[2022-04-09 21:25:21] __main__ INFO: [0mEpoch 9 Step 500/1181 lr 0.100000 loss 0.0365 (0.0362) angle error 3.34 (3.21)
+[32m[2022-04-09 21:25:34] __main__ INFO: [0mEpoch 9 Step 600/1181 lr 0.100000 loss 0.0452 (0.0364) angle error 3.98 (3.23)
+[32m[2022-04-09 21:25:50] __main__ INFO: [0mEpoch 9 Step 700/1181 lr 0.100000 loss 0.0278 (0.0363) angle error 2.51 (3.22)
+[32m[2022-04-09 21:26:06] __main__ INFO: [0mEpoch 9 Step 800/1181 lr 0.100000 loss 0.0293 (0.0363) angle error 2.64 (3.22)
+[32m[2022-04-09 21:26:27] __main__ INFO: [0mEpoch 9 Step 900/1181 lr 0.100000 loss 0.0302 (0.0363) angle error 2.71 (3.21)
+[32m[2022-04-09 21:26:53] __main__ INFO: [0mEpoch 9 Step 1000/1181 lr 0.100000 loss 0.0387 (0.0363) angle error 3.51 (3.21)
+[32m[2022-04-09 21:27:21] __main__ INFO: [0mEpoch 9 Step 1100/1181 lr 0.100000 loss 0.0402 (0.0364) angle error 3.63 (3.22)
+[32m[2022-04-09 21:27:44] __main__ INFO: [0mElapsed 193.66
+[32m[2022-04-09 21:27:44] __main__ INFO: [0mVal 9
+[32m[2022-04-09 21:27:49] __main__ INFO: [0mEpoch 9 loss 0.0413 angle error 3.72
+[32m[2022-04-09 21:27:49] __main__ INFO: [0mElapsed 5.25
+[32m[2022-04-09 21:27:49] __main__ INFO: [0mTrain 10
+[32m[2022-04-09 21:27:49] __main__ INFO: [0mEpoch 10 Step 0/1181 lr 0.100000 loss 0.0353 (0.0353) angle error 3.24 (3.24)
+[32m[2022-04-09 21:27:57] __main__ INFO: [0mEpoch 10 Step 100/1181 lr 0.100000 loss 0.0363 (0.0357) angle error 3.22 (3.16)
+[32m[2022-04-09 21:28:05] __main__ INFO: [0mEpoch 10 Step 200/1181 lr 0.100000 loss 0.0360 (0.0360) angle error 3.18 (3.18)
+[32m[2022-04-09 21:28:13] __main__ INFO: [0mEpoch 10 Step 300/1181 lr 0.100000 loss 0.0364 (0.0356) angle error 3.13 (3.15)
+[32m[2022-04-09 21:28:23] __main__ INFO: [0mEpoch 10 Step 400/1181 lr 0.100000 loss 0.0359 (0.0356) angle error 3.28 (3.16)
+[32m[2022-04-09 21:28:35] __main__ INFO: [0mEpoch 10 Step 500/1181 lr 0.100000 loss 0.0296 (0.0359) angle error 2.64 (3.18)
+[32m[2022-04-09 21:28:46] __main__ INFO: [0mEpoch 10 Step 600/1181 lr 0.100000 loss 0.0266 (0.0357) angle error 2.43 (3.16)
+[32m[2022-04-09 21:28:59] __main__ INFO: [0mEpoch 10 Step 700/1181 lr 0.100000 loss 0.0350 (0.0357) angle error 3.12 (3.16)
+[32m[2022-04-09 21:29:14] __main__ INFO: [0mEpoch 10 Step 800/1181 lr 0.100000 loss 0.0366 (0.0357) angle error 3.24 (3.16)
+[32m[2022-04-09 21:29:33] __main__ INFO: [0mEpoch 10 Step 900/1181 lr 0.100000 loss 0.0341 (0.0356) angle error 3.01 (3.15)
+[32m[2022-04-09 21:29:57] __main__ INFO: [0mEpoch 10 Step 1000/1181 lr 0.100000 loss 0.0408 (0.0356) angle error 3.80 (3.16)
+[32m[2022-04-09 21:30:25] __main__ INFO: [0mEpoch 10 Step 1100/1181 lr 0.100000 loss 0.0273 (0.0357) angle error 2.38 (3.16)
+[32m[2022-04-09 21:30:48] __main__ INFO: [0mElapsed 178.76
+[32m[2022-04-09 21:30:48] __main__ INFO: [0mVal 10
+[32m[2022-04-09 21:31:56] __main__ INFO: [0mEpoch 10 loss 0.0310 angle error 2.76
+[32m[2022-04-09 21:31:56] __main__ INFO: [0mElapsed 67.94
+[32m[2022-04-09 21:31:56] fvcore.common.checkpoint INFO: [0mSaving checkpoint to experiments/mpiifacegaze/resnet_simple_14/exp00/00/checkpoint_0010.pth
+[32m[2022-04-09 21:31:57] __main__ INFO: [0mTrain 11
+[32m[2022-04-09 21:31:57] __main__ INFO: [0mEpoch 11 Step 0/1181 lr 0.010000 loss 0.0256 (0.0256) angle error 2.25 (2.25)
+[32m[2022-04-09 21:32:07] __main__ INFO: [0mEpoch 11 Step 100/1181 lr 0.010000 loss 0.0198 (0.0213) angle error 1.78 (1.90)
+[32m[2022-04-09 21:32:17] __main__ INFO: [0mEpoch 11 Step 200/1181 lr 0.010000 loss 0.0239 (0.0205) angle error 2.18 (1.84)
+[32m[2022-04-09 21:32:29] __main__ INFO: [0mEpoch 11 Step 300/1181 lr 0.010000 loss 0.0177 (0.0201) angle error 1.60 (1.80)
+[32m[2022-04-09 21:32:42] __main__ INFO: [0mEpoch 11 Step 400/1181 lr 0.010000 loss 0.0174 (0.0198) angle error 1.56 (1.77)
+[32m[2022-04-09 21:32:55] __main__ INFO: [0mEpoch 11 Step 500/1181 lr 0.010000 loss 0.0151 (0.0193) angle error 1.33 (1.73)
+[32m[2022-04-09 21:33:08] __main__ INFO: [0mEpoch 11 Step 600/1181 lr 0.010000 loss 0.0184 (0.0191) angle error 1.60 (1.71)
+[32m[2022-04-09 21:33:27] __main__ INFO: [0mEpoch 11 Step 700/1181 lr 0.010000 loss 0.0258 (0.0189) angle error 2.38 (1.69)
+[32m[2022-04-09 21:33:43] __main__ INFO: [0mEpoch 11 Step 800/1181 lr 0.010000 loss 0.0186 (0.0187) angle error 1.68 (1.67)
+[32m[2022-04-09 21:34:02] __main__ INFO: [0mEpoch 11 Step 900/1181 lr 0.010000 loss 0.0134 (0.0185) angle error 1.16 (1.66)
+[32m[2022-04-09 21:34:26] __main__ INFO: [0mEpoch 11 Step 1000/1181 lr 0.010000 loss 0.0182 (0.0184) angle error 1.62 (1.65)
+[32m[2022-04-09 21:34:54] __main__ INFO: [0mEpoch 11 Step 1100/1181 lr 0.010000 loss 0.0191 (0.0183) angle error 1.70 (1.64)
+[32m[2022-04-09 21:35:17] __main__ INFO: [0mElapsed 200.83
+[32m[2022-04-09 21:35:17] __main__ INFO: [0mVal 11
+[32m[2022-04-09 21:35:24] __main__ INFO: [0mEpoch 11 loss 0.0196 angle error 1.75
+[32m[2022-04-09 21:35:24] __main__ INFO: [0mElapsed 6.32
+[32m[2022-04-09 21:35:24] __main__ INFO: [0mTrain 12
+[32m[2022-04-09 21:35:24] __main__ INFO: [0mEpoch 12 Step 0/1181 lr 0.010000 loss 0.0138 (0.0138) angle error 1.23 (1.23)
+[32m[2022-04-09 21:35:31] __main__ INFO: [0mEpoch 12 Step 100/1181 lr 0.010000 loss 0.0159 (0.0170) angle error 1.40 (1.52)
+[32m[2022-04-09 21:35:40] __main__ INFO: [0mEpoch 12 Step 200/1181 lr 0.010000 loss 0.0148 (0.0164) angle error 1.28 (1.47)
+[32m[2022-04-09 21:35:48] __main__ INFO: [0mEpoch 12 Step 300/1181 lr 0.010000 loss 0.0163 (0.0163) angle error 1.50 (1.46)
+[32m[2022-04-09 21:35:56] __main__ INFO: [0mEpoch 12 Step 400/1181 lr 0.010000 loss 0.0152 (0.0162) angle error 1.40 (1.45)
+[32m[2022-04-09 21:36:05] __main__ INFO: [0mEpoch 12 Step 500/1181 lr 0.010000 loss 0.0153 (0.0161) angle error 1.34 (1.45)
+[32m[2022-04-09 21:36:16] __main__ INFO: [0mEpoch 12 Step 600/1181 lr 0.010000 loss 0.0125 (0.0161) angle error 1.10 (1.44)
+[32m[2022-04-09 21:36:27] __main__ INFO: [0mEpoch 12 Step 700/1181 lr 0.010000 loss 0.0145 (0.0160) angle error 1.29 (1.43)
+[32m[2022-04-09 21:36:41] __main__ INFO: [0mEpoch 12 Step 800/1181 lr 0.010000 loss 0.0129 (0.0159) angle error 1.14 (1.42)
+[32m[2022-04-09 21:36:57] __main__ INFO: [0mEpoch 12 Step 900/1181 lr 0.010000 loss 0.0148 (0.0159) angle error 1.34 (1.43)
+[32m[2022-04-09 21:37:19] __main__ INFO: [0mEpoch 12 Step 1000/1181 lr 0.010000 loss 0.0183 (0.0159) angle error 1.65 (1.43)
+[32m[2022-04-09 21:37:44] __main__ INFO: [0mEpoch 12 Step 1100/1181 lr 0.010000 loss 0.0141 (0.0159) angle error 1.27 (1.42)
+[32m[2022-04-09 21:38:06] __main__ INFO: [0mElapsed 162.01
+[32m[2022-04-09 21:38:06] __main__ INFO: [0mVal 12
+[32m[2022-04-09 21:39:00] __main__ INFO: [0mEpoch 12 loss 0.0184 angle error 1.65
+[32m[2022-04-09 21:39:00] __main__ INFO: [0mElapsed 53.84
+[32m[2022-04-09 21:39:00] __main__ INFO: [0mTrain 13
+[32m[2022-04-09 21:39:00] __main__ INFO: [0mEpoch 13 Step 0/1181 lr 0.010000 loss 0.0118 (0.0118) angle error 1.04 (1.04)
+[32m[2022-04-09 21:39:08] __main__ INFO: [0mEpoch 13 Step 100/1181 lr 0.010000 loss 0.0101 (0.0147) angle error 0.93 (1.32)
+[32m[2022-04-09 21:39:17] __main__ INFO: [0mEpoch 13 Step 200/1181 lr 0.010000 loss 0.0113 (0.0145) angle error 1.06 (1.30)
+[32m[2022-04-09 21:39:26] __main__ INFO: [0mEpoch 13 Step 300/1181 lr 0.010000 loss 0.0149 (0.0146) angle error 1.40 (1.31)
+[32m[2022-04-09 21:39:35] __main__ INFO: [0mEpoch 13 Step 400/1181 lr 0.010000 loss 0.0131 (0.0147) angle error 1.17 (1.32)
+[32m[2022-04-09 21:39:46] __main__ INFO: [0mEpoch 13 Step 500/1181 lr 0.010000 loss 0.0120 (0.0146) angle error 1.07 (1.31)
+[32m[2022-04-09 21:39:57] __main__ INFO: [0mEpoch 13 Step 600/1181 lr 0.010000 loss 0.0241 (0.0147) angle error 2.36 (1.32)
+[32m[2022-04-09 21:40:10] __main__ INFO: [0mEpoch 13 Step 700/1181 lr 0.010000 loss 0.0139 (0.0147) angle error 1.24 (1.32)
+[32m[2022-04-09 21:40:25] __main__ INFO: [0mEpoch 13 Step 800/1181 lr 0.010000 loss 0.0132 (0.0146) angle error 1.20 (1.31)
+[32m[2022-04-09 21:40:42] __main__ INFO: [0mEpoch 13 Step 900/1181 lr 0.010000 loss 0.0190 (0.0146) angle error 1.68 (1.31)
+[32m[2022-04-09 21:41:06] __main__ INFO: [0mEpoch 13 Step 1000/1181 lr 0.010000 loss 0.0201 (0.0146) angle error 1.91 (1.31)
+[32m[2022-04-09 21:41:34] __main__ INFO: [0mEpoch 13 Step 1100/1181 lr 0.010000 loss 0.0135 (0.0146) angle error 1.18 (1.31)
+[32m[2022-04-09 21:42:07] __main__ INFO: [0mElapsed 187.06
+[32m[2022-04-09 21:42:07] __main__ INFO: [0mVal 13
+[32m[2022-04-09 21:42:26] __main__ INFO: [0mEpoch 13 loss 0.0178 angle error 1.60
+[32m[2022-04-09 21:42:26] __main__ INFO: [0mElapsed 18.92
+[32m[2022-04-09 21:42:26] __main__ INFO: [0mTrain 14
+[32m[2022-04-09 21:42:26] __main__ INFO: [0mEpoch 14 Step 0/1181 lr 0.001000 loss 0.0172 (0.0172) angle error 1.57 (1.57)
+[32m[2022-04-09 21:42:38] __main__ INFO: [0mEpoch 14 Step 100/1181 lr 0.001000 loss 0.0135 (0.0133) angle error 1.24 (1.21)
+[32m[2022-04-09 21:42:48] __main__ INFO: [0mEpoch 14 Step 200/1181 lr 0.001000 loss 0.0098 (0.0132) angle error 0.86 (1.20)
+[32m[2022-04-09 21:42:59] __main__ INFO: [0mEpoch 14 Step 300/1181 lr 0.001000 loss 0.0100 (0.0131) angle error 0.91 (1.19)
+[32m[2022-04-09 21:43:12] __main__ INFO: [0mEpoch 14 Step 400/1181 lr 0.001000 loss 0.0113 (0.0132) angle error 1.06 (nan)
+[32m[2022-04-09 21:43:26] __main__ INFO: [0mEpoch 14 Step 500/1181 lr 0.001000 loss 0.0121 (0.0132) angle error 1.10 (nan)
+[32m[2022-04-09 21:43:42] __main__ INFO: [0mEpoch 14 Step 600/1181 lr 0.001000 loss 0.0116 (0.0132) angle error 1.02 (nan)
+[32m[2022-04-09 21:44:03] __main__ INFO: [0mEpoch 14 Step 700/1181 lr 0.001000 loss 0.0103 (0.0131) angle error 0.90 (nan)
+[32m[2022-04-09 21:44:23] __main__ INFO: [0mEpoch 14 Step 800/1181 lr 0.001000 loss 0.0136 (0.0131) angle error 1.23 (nan)
+[32m[2022-04-09 21:44:48] __main__ INFO: [0mEpoch 14 Step 900/1181 lr 0.001000 loss 0.0119 (0.0131) angle error 1.07 (nan)
+[32m[2022-04-09 21:45:16] __main__ INFO: [0mEpoch 14 Step 1000/1181 lr 0.001000 loss 0.0121 (0.0131) angle error 1.10 (nan)
+[32m[2022-04-09 21:45:52] __main__ INFO: [0mEpoch 14 Step 1100/1181 lr 0.001000 loss 0.0105 (0.0131) angle error 0.94 (nan)
+[32m[2022-04-09 21:46:16] __main__ INFO: [0mElapsed 230.31
+[32m[2022-04-09 21:46:16] __main__ INFO: [0mVal 14
+[32m[2022-04-09 21:46:56] __main__ INFO: [0mEpoch 14 loss 0.0174 angle error 1.55
+[32m[2022-04-09 21:46:56] __main__ INFO: [0mElapsed 40.55
+[32m[2022-04-09 21:46:56] __main__ INFO: [0mTrain 15
+[32m[2022-04-09 21:46:57] __main__ INFO: [0mEpoch 15 Step 0/1181 lr 0.001000 loss 0.0120 (0.0120) angle error 1.08 (1.08)
+[32m[2022-04-09 21:47:07] __main__ INFO: [0mEpoch 15 Step 100/1181 lr 0.001000 loss 0.0117 (0.0129) angle error 1.05 (1.17)
+[32m[2022-04-09 21:47:17] __main__ INFO: [0mEpoch 15 Step 200/1181 lr 0.001000 loss 0.0131 (0.0130) angle error 1.17 (1.17)
+[32m[2022-04-09 21:47:26] __main__ INFO: [0mEpoch 15 Step 300/1181 lr 0.001000 loss 0.0137 (0.0128) angle error 1.25 (1.16)
+[32m[2022-04-09 21:47:37] __main__ INFO: [0mEpoch 15 Step 400/1181 lr 0.001000 loss 0.0174 (0.0127) angle error 1.65 (1.15)
+[32m[2022-04-09 21:47:49] __main__ INFO: [0mEpoch 15 Step 500/1181 lr 0.001000 loss 0.0114 (0.0127) angle error 1.03 (1.15)
+[32m[2022-04-09 21:48:08] __main__ INFO: [0mEpoch 15 Step 600/1181 lr 0.001000 loss 0.0101 (0.0127) angle error 0.92 (nan)
+[32m[2022-04-09 21:48:25] __main__ INFO: [0mEpoch 15 Step 700/1181 lr 0.001000 loss 0.0151 (0.0126) angle error 1.41 (nan)
+[32m[2022-04-09 21:48:46] __main__ INFO: [0mEpoch 15 Step 800/1181 lr 0.001000 loss 0.0113 (0.0127) angle error 0.98 (nan)
+[32m[2022-04-09 21:49:06] __main__ INFO: [0mEpoch 15 Step 900/1181 lr 0.001000 loss 0.0109 (0.0127) angle error 0.96 (nan)
+[32m[2022-04-09 21:49:42] __main__ INFO: [0mEpoch 15 Step 1000/1181 lr 0.001000 loss 0.0116 (0.0128) angle error 1.02 (nan)
+[32m[2022-04-09 21:50:23] __main__ INFO: [0mEpoch 15 Step 1100/1181 lr 0.001000 loss 0.0135 (0.0128) angle error 1.19 (nan)
+[32m[2022-04-09 21:50:57] __main__ INFO: [0mElapsed 241.01
+[32m[2022-04-09 21:50:57] __main__ INFO: [0mVal 15
+[32m[2022-04-09 21:51:51] __main__ INFO: [0mEpoch 15 loss 0.0173 angle error 1.55
+[32m[2022-04-09 21:51:51] __main__ INFO: [0mElapsed 53.35
+[32m[2022-04-09 21:51:51] fvcore.common.checkpoint INFO: [0mSaving checkpoint to experiments/mpiifacegaze/resnet_simple_14/exp00/00/checkpoint_0015.pth

@@ -76,11 +76,35 @@ def convert_to_unit_vector(
 
 def compute_angle_error(predictions: torch.Tensor,
                         labels: torch.Tensor) -> torch.Tensor:
+    if len(labels) == 0:
+        return torch.tensor(0.0)
     pred_x, pred_y, pred_z = convert_to_unit_vector(predictions)
     label_x, label_y, label_z = convert_to_unit_vector(labels)
     angles = pred_x * label_x + pred_y * label_y + pred_z * label_z
     angles = torch.clamp(angles, min=-1, max=1)
     return torch.acos(angles) * 180 / np.pi
+
+
+def accuracy(output, target, topk=(1,)):
+    """Computes the precision@k for the specified values of k"""
+    res = []
+
+    if len(target) == 0:
+        for _ in topk:
+            res.append(torch.tensor(0.0))
+        return res
+
+    maxk = max(topk)
+    batch_size = target.size(0)
+
+    _, pred = output.topk(maxk, 1, True, True)
+    pred = pred.t()
+    correct = pred.eq(target.reshape(1, -1).expand_as(pred))
+
+    for k in topk:
+        correct_k = correct[:k].reshape(-1).float().sum(0)
+        res.append(correct_k.mul_(100.0 / batch_size))
+    return res
 
 
 class AverageMeter:
@@ -97,4 +121,7 @@ class AverageMeter:
         self.val = val
         self.sum += val * num
         self.count += num
-        self.avg = self.sum / self.count
+        if self.count > 0:
+            self.avg = self.sum / self.count
+        else:
+            self.avg = 0

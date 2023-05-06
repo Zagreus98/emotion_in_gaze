@@ -3,10 +3,24 @@ from .config_node import ConfigNode
 config = ConfigNode()
 
 # option: ETH-XGaze, MPIIFaceGaze
-config.mode = 'MPIIFaceGaze'
+config.mode = 'ETHXGaze'
 
 config.dataset = ConfigNode()
 config.dataset.dataset_dir = 'datasets/MPIIFaceGaze.h5'
+config.dataset.raf_dataset_path = 'D:\datasets\RafDB'
+config.dataset.image_size = 224
+config.dataset.n_channels = 3
+config.dataset.mean = [0.485, 0.456, 0.406]
+config.dataset.std = [0.229, 0.224, 0.225]
+config.dataset.transform = ConfigNode()
+config.dataset.transform.train = ConfigNode()
+config.dataset.transform.train.horizontal_flip = False
+config.dataset.transform.train.resize = 224
+config.dataset.transform.val = ConfigNode()
+config.dataset.transform.val.resize = 224
+config.dataset.transform.test = ConfigNode()
+config.dataset.transform.test.resize = 224
+
 
 # transform
 config.transform = ConfigNode()
@@ -25,6 +39,9 @@ config.model.backbone.resnet_layers = [2, 2, 2]
 
 config.train = ConfigNode()
 config.train.batch_size = 64
+config.train.val_indices = [0]
+config.train.emo_pretrained = False
+config.train.resume_path = None
 # optimizer (options: sgd, adam, amsgrad)
 config.train.optimizer = 'adam'
 config.train.base_lr = 0.01
@@ -76,6 +93,11 @@ config.train.val_dataloader = ConfigNode()
 config.train.val_dataloader.num_workers = 1
 config.train.val_dataloader.pin_memory = False
 
+# task weights for the total loss function
+config.train.task_weights = ConfigNode()
+config.train.task_weights.gaze = 1.0
+config.train.task_weights.emotion = 1.0
+
 # test config
 config.test = ConfigNode()
 config.test.test_id = 0
@@ -99,22 +121,6 @@ config.gaze_estimator.checkpoint = ''
 config.gaze_estimator.camera_params = ''
 config.gaze_estimator.normalized_camera_params = 'data/calib/normalized_camera_params_eye.yaml'
 config.gaze_estimator.normalized_camera_distance = 0.6
-
-# demo
-config.demo = ConfigNode()
-config.demo.use_camera = True
-config.demo.display_on_screen = True
-config.demo.wait_time = 1
-config.demo.video_path = ''
-config.demo.output_dir = ''
-config.demo.output_file_extension = 'mp4'
-config.demo.head_pose_axis_length = 0.05
-config.demo.gaze_visualization_length = 0.05
-config.demo.show_bbox = True
-config.demo.show_head_pose = True
-config.demo.show_landmarks = True
-config.demo.show_normalized_image = False
-config.demo.show_template_model = False
 
 # cuDNN
 config.cudnn = ConfigNode()

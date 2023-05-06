@@ -7,13 +7,27 @@ import torchvision.utils
 from fvcore.common.checkpoint import Checkpointer
 from gaze_estimation.config import get_default_config
 from gaze_estimation import (GazeEstimationMethod, create_dataloader,
-                             create_logger, create_loss, create_model,
+                             create_logger, TotalLoss, create_model,
                              create_optimizer, create_scheduler,
                              create_tensorboard_writer)
-from gaze_estimation.utils import (AverageMeter, compute_angle_error,
+from gaze_estimation.utils import (AverageMeter, compute_angle_error, accuracy,
                                    create_train_output_dir, load_config,
                                    save_config, set_seeds, setup_cudnn)
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
+
+def prepare_preds_grds(pred_gazes, pred_emotions, grd_gazes, grd_emotions):
+    mask_gazes = torch.where(grd_gazes[:, 0] != 0)
+    mask_emotions = torch.where(grd_emotions[:, 0] != -1)
+
+    good_pred_gazes = pred_gazes[mask_gazes]
+    good_grd_gazes = grd_gazes[mask_gazes]
+
+    good_pred_emotions = pred_emotions[mask_emotions]
+    good_grd_emotions = grd_emotions[mask_emotions]
+
+    return good_pred_gazes, good_grd_gazes, good_pred_emotions, good_grd_emotions
 
 def train(epoch, model, optimizer, scheduler, loss_function, train_loader,
           config, tensorboard_writer, logger):
@@ -25,8 +39,9 @@ def train(epoch, model, optimizer, scheduler, loss_function, train_loader,
 
     loss_meter = AverageMeter()
     angle_error_meter = AverageMeter()
+    accuracy_meter = AverageMeter()
     start = time.time()
-    for step, (images, poses, gazes) in enumerate(train_loader):
+    for step, (images, grd_gazes, grd_emotions) in enumerate(train_loader):
         if config.tensorboard.train_images and step == 0:
             image = torchvision.utils.make_grid(images,
                                                 normalize=True,
@@ -34,35 +49,37 @@ def train(epoch, model, optimizer, scheduler, loss_function, train_loader,
             tensorboard_writer.add_image('Train/Image', image, epoch)
 
         images = images.to(device)
-        poses = poses.to(device)
-        gazes = gazes.to(device)
-
+        grd_gazes = grd_gazes.to(device)
+        grd_emotions = grd_emotions.to(device)
         optimizer.zero_grad()
 
-        if config.mode == GazeEstimationMethod.MPIIGaze.name:
-            outputs = model(images, poses)
-        elif config.mode == GazeEstimationMethod.MPIIFaceGaze.name:
-            outputs = model(images)
-        else:
-            raise ValueError
-        loss = loss_function(outputs, gazes)
+        pred_gazes, pred_emotions = model(images)
+
+        loss = loss_function(pred_gazes, pred_emotions, grd_gazes, grd_emotions.squeeze(1))
         loss.backward()
 
         optimizer.step()
+        good_pred_gazes, good_grd_gazes, good_pred_emotions, good_grd_emotions = prepare_preds_grds(
+            pred_gazes,
+            pred_emotions,
+            grd_gazes,
+            grd_emotions
+        )
+        angle_error = compute_angle_error(good_pred_gazes, good_grd_gazes[:, 1:]).mean()
+        emotion_accuracy = accuracy(good_pred_emotions, good_grd_emotions)[0]
 
-        angle_error = compute_angle_error(outputs, gazes).mean()
-
-        num = images.size(0)
+        num = images.size(0)  # batch_size
         loss_meter.update(loss.item(), num)
-        angle_error_meter.update(angle_error.item(), num)
+        angle_error_meter.update(angle_error.item(), num=good_grd_gazes.size(0))
+        accuracy_meter.update(emotion_accuracy.item(), num=good_grd_emotions.size(0))
 
         if step % config.train.log_period == 0:
             logger.info(f'Epoch {epoch} '
                         f'Step {step}/{len(train_loader)} '
                         f'lr {scheduler.get_last_lr()[0]:.6f} '
                         f'loss {loss_meter.val:.4f} ({loss_meter.avg:.4f}) '
-                        f'angle error {angle_error_meter.val:.2f} '
-                        f'({angle_error_meter.avg:.2f})')
+                        f'angle error {angle_error_meter.val:.2f} ({angle_error_meter.avg:.2f}) '
+                        f'emo accuracy {accuracy_meter.val:.2f} ({accuracy_meter.avg:.2f}) ')
 
     elapsed = time.time() - start
     logger.info(f'Elapsed {elapsed:.2f}')
@@ -85,10 +102,11 @@ def validate(epoch, model, loss_function, val_loader, config,
 
     loss_meter = AverageMeter()
     angle_error_meter = AverageMeter()
+    accuracy_meter = AverageMeter()
     start = time.time()
 
     with torch.no_grad():
-        for step, (images, poses, gazes) in enumerate(val_loader):
+        for step, (images, grd_gazes, grd_emotions) in enumerate(val_loader):
             if config.tensorboard.val_images and epoch == 0 and step == 0:
                 image = torchvision.utils.make_grid(images,
                                                     normalize=True,
@@ -96,26 +114,31 @@ def validate(epoch, model, loss_function, val_loader, config,
                 tensorboard_writer.add_image('Val/Image', image, epoch)
 
             images = images.to(device)
-            poses = poses.to(device)
-            gazes = gazes.to(device)
+            grd_gazes = grd_gazes.to(device)
+            grd_emotions = grd_emotions.to(device)
 
-            if config.mode == GazeEstimationMethod.MPIIGaze.name:
-                outputs = model(images, poses)
-            elif config.mode == GazeEstimationMethod.MPIIFaceGaze.name:
-                outputs = model(images)
-            else:
-                raise ValueError
-            loss = loss_function(outputs, gazes)
+            pred_gazes, pred_emotions = model(images)
 
-            angle_error = compute_angle_error(outputs, gazes).mean()
+            loss = loss_function(pred_gazes, pred_emotions, grd_gazes, grd_emotions.squeeze(1))
+
+            good_pred_gazes, good_grd_gazes, good_pred_emotions, good_grd_emotions = prepare_preds_grds(
+                pred_gazes,
+                pred_emotions,
+                grd_gazes,
+                grd_emotions
+            )
+            angle_error = compute_angle_error(pred_gazes, grd_gazes[:, 1:]).mean()
+            emotion_accuracy = accuracy(pred_emotions, grd_emotions)[0]
 
             num = images.size(0)
             loss_meter.update(loss.item(), num)
-            angle_error_meter.update(angle_error.item(), num)
+            angle_error_meter.update(angle_error.item(), num=good_grd_gazes.size(0))
+            accuracy_meter.update(emotion_accuracy.item(), num=good_grd_emotions.size(0))
 
     logger.info(f'Epoch {epoch} '
                 f'loss {loss_meter.avg:.4f} '
-                f'angle error {angle_error_meter.avg:.2f}')
+                f'angle error {angle_error_meter.avg:.2f} '
+                f'emo accuracy {accuracy_meter.avg:.2f} ')
 
     elapsed = time.time() - start
     logger.info(f'Elapsed {elapsed:.2f}')
@@ -134,8 +157,8 @@ def validate(epoch, model, loss_function, val_loader, config,
 def main():
     # config = load_config()
 
-    path_config = '/Train_eval_mpiifacegaze/configs/resnet_simple_14_train.yaml'
-
+    path_config = r'D:\emotion_in_gaze\configs\efficientnet_train.yaml'
+    # TODO: treci pe omegaconf sau hydra mai bine ca inebunesc asa (mai bine hydra)
     config = get_default_config()
     config.merge_from_file(path_config)
 
@@ -148,10 +171,17 @@ def main():
                            output_dir=output_dir,
                            filename='log.txt')
     logger.info(config)
-
+    # TODO: create dataset for rafdb (o sa fie mostly copy paste ca am facut asta deja) - done
+    # TODO: scoate pose din datasetul de eth-xgaze ca nu am nevoie de asa ceva - done
+    # TODO: concat dataset cu clasele de person - done
+    # TODO: facut task indicator pentru loss in functie de targets (daca avem gaze/emo) - done
+    # TODO: adus metoda de evaluare si pentru emotii, din fericire avem tot average meter deci o sa fie usor - done
+    # TODO: afiseaza lossurile individual !!!
+    # TODO: foloseste logger sa afisezi numarul de samples pt emotions vs gaze
+    # TODO: weight sampler daca va fi nevoie, sa speram ca nu
     train_loader, val_loader = create_dataloader(config, is_train=True)
     model = create_model(config)
-    loss_function = create_loss(config)
+    loss_function = TotalLoss(config)
     optimizer = create_optimizer(config, model)
     scheduler = create_scheduler(config, optimizer)
     checkpointer = Checkpointer(model,

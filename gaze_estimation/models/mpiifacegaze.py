@@ -4,8 +4,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
-import timm
 import yacs.config
+
 
 class Backbone(torchvision.models.ResNet):
     def __init__(self, config: yacs.config.CfgNode):
@@ -17,7 +17,7 @@ class Backbone(torchvision.models.ResNet):
 
         # configuram cate blocuri resnet de fiecare tip vrem in backbone
         layers = list(config.model.backbone.resnet_layers) + [1] # [2,2,2,1]
-        super().__init__(block,layers)
+        super().__init__(block, layers)
 
         # stergem ultimele layere de conv, avgpool si fc pentru ca o sa fie inlocuite cu mecanismul de spatial weights
         del self.layer4
@@ -56,8 +56,7 @@ class Backbone(torchvision.models.ResNet):
         return x
 
 
-
-class Model(nn.Module):
+class FaceGaze(nn.Module):
     def __init__(self, config: yacs.config.CfgNode):
         super().__init__()
         self.feature_extractor = Backbone(config)
@@ -85,7 +84,7 @@ class Model(nn.Module):
     # sectiunea 4.1 din paper:The gradient with respect to W
     # is normalised by the total number of the feature maps N,
     # since the weight map affects all the feature maps equally.
-    # see https://pytorch.org/tutorials/beginner/former_torchies/nnft_tutorial.html#forward-and-backward-function-hooks
+    # vezi https://pytorch.org/tutorials/beginner/former_torchies/nnft_tutorial.html#forward-and-backward-function-hooks
     def _register_hook(self):
         n_channels = self.feature_extractor.n_features
 
@@ -108,14 +107,3 @@ class Model(nn.Module):
         x = self.fc(x)
         # returnam pitch, yaw
         return x
-
-def create_model(config: yacs.config.CfgNode) -> torch.nn.Module:
-    mode = config.mode
-
-    if mode == 'MPIIFaceGaze':
-        model = Model(config)
-    else:
-        raise ValueError
-    device = torch.device(config.device)
-    model.to(device)
-    return model

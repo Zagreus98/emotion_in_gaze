@@ -4,6 +4,7 @@ import enum
 class GazeEstimationMethod(enum.Enum):
     MPIIGaze = enum.auto()
     MPIIFaceGaze = enum.auto()
+    ETHXGaze = enum.auto()
 
 
 class LossType(enum.Enum):

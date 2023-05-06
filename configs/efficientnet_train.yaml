@@ -1,0 +1,63 @@
+mode: ETHXGaze
+device: cuda
+dataset:
+  dataset_dir: D:\datasets\xgaze_224
+  raf_dataset_path: D:\datasets\RafDB
+  image_size: 224
+  n_channels: 3
+  mean: [ 0.485, 0.456, 0.406 ]  # RGB
+  std: [ 0.229, 0.224, 0.225 ]  # RGB
+  transform:
+    train:
+      horizontal_flip: False
+      resize: 224
+    val:
+      resize: 224
+    test:
+      resize: 224
+
+model:
+  name: gaze_emotion
+  backbone:
+    name: tf_efficientnet_b2
+    pretrained: tf_efficientnet_b2
+
+train:
+  val_first: True
+  emo_pretrained: True
+  resume_path: False
+  batch_size: 32
+  optimizer: adam
+  base_lr: 0.01
+  momentum: 0.9
+  nesterov: True
+  weight_decay: 0.0001
+  no_weight_decay_on_bn: False
+  loss: L1
+  seed: 0
+  output_dir: D:\emotion_in_gaze\experiments\effnet\exp00
+  log_period: 100
+  checkpoint_period: 5
+  use_tensorboard: False
+  val_indices: [0, 1, 2]
+  train_dataloader:
+    num_workers: 2
+    drop_last: True
+    pin_memory: False
+  val_dataloader:
+    num_workers: 2
+    pin_memory: False
+  task_weights:
+    gaze: 1.0
+    emotion: 1.0
+
+scheduler:
+  epochs: 15
+  type: multistep
+  milestones: [10, 13]
+  lr_decay: 0.1
+  lr_min_factor: 0.001
+
+cudnn:
+  benchmark: True
+  deterministic: True

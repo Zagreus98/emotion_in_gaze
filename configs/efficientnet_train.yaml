@@ -23,21 +23,21 @@ model:
     pretrained: tf_efficientnet_b2
 
 train:
-  val_first: True
+  val_first: False
   emo_pretrained: True
   resume_path: False
   batch_size: 32
   optimizer: adam
-  base_lr: 0.01
+  base_lr: 0.001
   momentum: 0.9
   nesterov: True
   weight_decay: 0.0001
   no_weight_decay_on_bn: False
   loss: L1
   seed: 0
-  output_dir: D:\emotion_in_gaze\experiments\effnet\exp00
+  output_dir: D:\emotion_in_gaze\experiments\effnet\exp01
   log_period: 100
-  checkpoint_period: 5
+  checkpoint_period: 3
   use_tensorboard: False
   val_indices: [0, 1, 2]
   train_dataloader:
@@ -48,8 +48,8 @@ train:
     num_workers: 2
     pin_memory: False
   task_weights:
-    gaze: 1.0
-    emotion: 1.0
+    gaze: 0.7
+    emotion: 0.3
 
 scheduler:
   epochs: 15

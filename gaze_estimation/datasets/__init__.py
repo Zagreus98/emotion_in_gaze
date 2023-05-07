@@ -14,7 +14,7 @@ from .rafdb import RafDataset
 def create_dataset(
         config: yacs.config.CfgNode,
         is_train: bool = True,
-) -> Union[List[Dataset], Dataset, Tuple[ConcatDataset, ConcatDataset]]:
+) -> Union[List[Dataset], Dataset, Tuple[ConcatDataset, ConcatDataset, List]]:
     # TODO: remove all MPIIFaceGaze mentions and if elses
     if config.mode == GazeEstimationMethod.MPIIFaceGaze.name:
         from .mpiifacegaze import OnePersonDataset
@@ -32,6 +32,7 @@ def create_dataset(
     if config.mode == GazeEstimationMethod.ETHXGaze.name:
         train_dataset = []
         val_dataset = []
+        sampler_weights = []
 
         # ETH-XGaze datatasets reading
         split_file = dataset_dir / 'train_test_split.json'
@@ -65,7 +66,15 @@ def create_dataset(
         )
         train_dataset.append(emotion_train_dataset)
         train_dataset.extend(gaze_train_datasets)
+        for i, dataset in enumerate(train_dataset):
+            if i == 0:
+                weight = 10 / len(dataset)  # TODO: add a hyperparameter for this
+            else:
+                weight = 1 / len(dataset)
+            sampler_weights.extend([weight] * len(dataset))
+
         train_dataset = ConcatDataset(train_dataset)
+
 
         # Prepare val dataset
         gaze_val_dataset = [
@@ -87,7 +96,7 @@ def create_dataset(
             for dataset in train_dataset.datasets:
                 dataset.random_horizontal_flip = True
 
-        return train_dataset, val_dataset
+        return train_dataset, val_dataset, sampler_weights
 
     elif config.mode == GazeEstimationMethod.MPIIFaceGaze.name:
         transform = create_transform(config)

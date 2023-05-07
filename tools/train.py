@@ -29,6 +29,7 @@ def prepare_preds_grds(pred_gazes, pred_emotions, grd_gazes, grd_emotions):
 
     return good_pred_gazes, good_grd_gazes, good_pred_emotions, good_grd_emotions
 
+
 def train(epoch, model, optimizer, scheduler, loss_function, train_loader,
           config, tensorboard_writer, logger):
     logger.info(f'Train {epoch}')
@@ -42,11 +43,6 @@ def train(epoch, model, optimizer, scheduler, loss_function, train_loader,
     accuracy_meter = AverageMeter()
     start = time.time()
     for step, (images, grd_gazes, grd_emotions) in enumerate(train_loader):
-        if config.tensorboard.train_images and step == 0:
-            image = torchvision.utils.make_grid(images,
-                                                normalize=True,
-                                                scale_each=True)
-            tensorboard_writer.add_image('Train/Image', image, epoch)
 
         images = images.to(device)
         grd_gazes = grd_gazes.to(device)

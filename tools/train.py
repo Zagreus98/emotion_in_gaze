@@ -38,6 +38,8 @@ def train(epoch, model, optimizer, scheduler, loss_function, train_loader,
     device = torch.device(config.device)
 
     loss_meter = AverageMeter()
+    e_loss_meter = AverageMeter()
+    g_loss_meter = AverageMeter()
     angle_error_meter = AverageMeter()
     accuracy_meter = AverageMeter()
     start = time.time()
@@ -55,7 +57,7 @@ def train(epoch, model, optimizer, scheduler, loss_function, train_loader,
 
         pred_gazes, pred_emotions = model(images)
 
-        loss = loss_function(pred_gazes, pred_emotions, grd_gazes, grd_emotions.squeeze(1))
+        loss, e_loss, g_loss = loss_function(pred_gazes, pred_emotions, grd_gazes, grd_emotions.squeeze(1))
         loss.backward()
 
         optimizer.step()
@@ -70,14 +72,20 @@ def train(epoch, model, optimizer, scheduler, loss_function, train_loader,
 
         num = images.size(0)  # batch_size
         loss_meter.update(loss.item(), num)
+
         angle_error_meter.update(angle_error.item(), num=good_grd_gazes.size(0))
+        g_loss_meter.update(g_loss.item(), num=good_grd_gazes.size(0))
+
         accuracy_meter.update(emotion_accuracy.item(), num=good_grd_emotions.size(0))
+        e_loss_meter.update(e_loss.item(), num=good_grd_emotions.size(0))
 
         if step % config.train.log_period == 0:
             logger.info(f'Epoch {epoch} '
                         f'Step {step}/{len(train_loader)} '
                         f'lr {scheduler.get_last_lr()[0]:.6f} '
                         f'loss {loss_meter.val:.4f} ({loss_meter.avg:.4f}) '
+                        f'g_loss: ({g_loss_meter.avg:.4f}) '
+                        f'e_loss: ({e_loss_meter.avg:.4f}) '
                         f'angle error {angle_error_meter.val:.2f} ({angle_error_meter.avg:.2f}) '
                         f'emo accuracy {accuracy_meter.val:.2f} ({accuracy_meter.avg:.2f}) ')
 
@@ -119,7 +127,7 @@ def validate(epoch, model, loss_function, val_loader, config,
 
             pred_gazes, pred_emotions = model(images)
 
-            loss = loss_function(pred_gazes, pred_emotions, grd_gazes, grd_emotions.squeeze(1))
+            loss, e_loss, g_loss = loss_function(pred_gazes, pred_emotions, grd_gazes, grd_emotions.squeeze(1))
 
             good_pred_gazes, good_grd_gazes, good_pred_emotions, good_grd_emotions = prepare_preds_grds(
                 pred_gazes,
@@ -158,7 +166,6 @@ def main():
     # config = load_config()
 
     path_config = r'D:\emotion_in_gaze\configs\efficientnet_train.yaml'
-    # TODO: treci pe omegaconf sau hydra mai bine ca inebunesc asa (mai bine hydra)
     config = get_default_config()
     config.merge_from_file(path_config)
 

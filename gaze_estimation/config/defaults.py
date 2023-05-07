@@ -55,14 +55,10 @@ config.train.seed = 0
 config.train.val_first = True
 config.train.val_period = 1
 
-config.train.test_id = 0
-config.train.val_ratio = 0.1
-
-config.train.output_dir = 'experiments/mpiigaze/exp00'
+config.train.output_dir = 'experiments/gaze_emo/exp00'
 config.train.log_period = 100
-config.train.checkpoint_period = 10
+config.train.checkpoint_period = 2
 
-config.train.use_tensorboard = True
 config.tensorboard = ConfigNode()
 config.tensorboard.train_images = False
 config.tensorboard.val_images = False
@@ -108,19 +104,6 @@ config.test.batch_size = 256
 config.test.dataloader = ConfigNode()
 config.test.dataloader.num_workers = 2
 config.test.dataloader.pin_memory = False
-
-# Face detector
-config.face_detector = ConfigNode()
-config.face_detector.mode = 'dlib'
-config.face_detector.dlib = ConfigNode()
-config.face_detector.dlib.model = 'data/dlib/shape_predictor_68_face_landmarks.dat'
-
-# Gaze estimator
-config.gaze_estimator = ConfigNode()
-config.gaze_estimator.checkpoint = ''
-config.gaze_estimator.camera_params = ''
-config.gaze_estimator.normalized_camera_params = 'data/calib/normalized_camera_params_eye.yaml'
-config.gaze_estimator.normalized_camera_distance = 0.6
 
 # cuDNN
 config.cudnn = ConfigNode()

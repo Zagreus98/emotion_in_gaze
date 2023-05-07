@@ -14,13 +14,13 @@ class RafDataset(Dataset):
         self.dataset = self.get_rafdb()
         self.random_horizontal_flip = False
         self.raf2affect = {
-            0: 6,
-            1: 2,
-            2: 1,
-            3: 3,
-            4: 5,
-            5: 0,
-            6: 4,
+            0: 6,  # anger
+            1: 2,  # disgust
+            2: 1,  # fear
+            3: 3,  # happiness
+            4: 5,  # neutral
+            5: 0,  # sadness
+            6: 4,  # surprise
         }
 
     def get_image(self, img_name):

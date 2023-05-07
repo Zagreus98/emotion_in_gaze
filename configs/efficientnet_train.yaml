@@ -1,4 +1,4 @@
-mode: ETHXGaze
+mode: emo_in_gaze
 device: cuda
 dataset:
   dataset_dir: D:\datasets\xgaze_224
@@ -26,6 +26,7 @@ train:
   val_first: False
   emo_pretrained: True
   resume_path: False
+  wandb: True
   batch_size: 32
   optimizer: adam
   base_lr: 0.001
@@ -35,10 +36,9 @@ train:
   no_weight_decay_on_bn: False
   loss: L1
   seed: 0
-  output_dir: D:\emotion_in_gaze\experiments\effnet\exp01
+  output_dir: D:\emotion_in_gaze\experiments\effnet\exp02
   log_period: 100
   checkpoint_period: 3
-  use_tensorboard: False
   val_indices: [0, 1, 2]
   train_dataloader:
     num_workers: 2
@@ -54,7 +54,7 @@ train:
 scheduler:
   epochs: 15
   type: multistep
-  milestones: [10, 13]
+  milestones: [8, 10]
   lr_decay: 0.1
   lr_min_factor: 0.001
 

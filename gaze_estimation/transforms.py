@@ -7,15 +7,6 @@ import torchvision
 from torchvision import transforms as T
 import yacs.config
 
-from .types import GazeEstimationMethod
-
-
-def create_transform(config: yacs.config.CfgNode) -> Any:
-    if config.mode == GazeEstimationMethod.MPIIFaceGaze.name:
-        return _create_mpiifacegaze_transform(config)
-    else:
-        raise ValueError
-
 
 def create_xgaze_transform(config: yacs.config.CfgNode, stage: str) -> Any:
     assert stage in ['train', 'val', 'test']

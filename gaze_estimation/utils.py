@@ -47,11 +47,7 @@ def save_config(config: yacs.config.CfgNode, output_dir: pathlib.Path) -> None:
 
 
 def create_train_output_dir(config: yacs.config.CfgNode) -> pathlib.Path:
-    output_root_dir = pathlib.Path(config.train.output_dir)
-    if config.train.test_id != -1:
-        output_dir = output_root_dir / f'{config.train.test_id:02}'
-    else:
-        output_dir = output_root_dir / 'all'
+    output_dir = pathlib.Path(config.train.output_dir)
     if output_dir.exists():
         raise RuntimeError(
             f'Output directory `{output_dir.as_posix()}` already exists.')

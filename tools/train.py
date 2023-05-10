@@ -87,19 +87,19 @@ def train(epoch, model, optimizer, scheduler, loss_function, train_loader, confi
                         f'angle error {angle_error_meter.val:.2f} ({angle_error_meter.avg:.2f}) '
                         f'emo accuracy {accuracy_meter.val:.2f} ({accuracy_meter.avg:.2f}) ')
         wandb.log({
-            'total_loss': loss_meter.avg,
-            'e_loss': e_loss_meter.avg,
-            'g_loss': g_loss_meter.avg,
+            'train/total_loss': loss_meter.avg,
+            'train/e_loss': e_loss_meter.avg,
+            'train/g_loss': g_loss_meter.avg,
         })
 
     elapsed = time.time() - start
     logger.info(f'Elapsed {elapsed:.2f}')
     wandb.log({
-        'total_loss_epoch': loss_meter.avg,
-        'e_loss_epoch': e_loss_meter.avg,
-        'g_loss_epoch': g_loss_meter.avg,
-        'angle_error_train': angle_error_meter.avg,
-        'emo_accuracy_train': accuracy_meter.avg,
+        'train/total_loss_epoch': loss_meter.avg,
+        'train/e_loss_epoch': e_loss_meter.avg,
+        'train/g_loss_epoch': g_loss_meter.avg,
+        'train/angle_error_train': angle_error_meter.avg,
+        'train/emo_accuracy_train': accuracy_meter.avg,
     })
 
 
@@ -145,9 +145,9 @@ def validate(epoch, model, loss_function, val_loader, config, logger):
                 f'angle error {angle_error_meter.avg:.2f} '
                 f'emo accuracy {accuracy_meter.avg:.2f} ')
     wandb.log({
-        'total_loss_epoch_val': loss_meter.avg,
-        'angle_error_val': angle_error_meter.avg,
-        'emo_accuracy_val': accuracy_meter.avg,
+        'val/total_loss_epoch_val': loss_meter.avg,
+        'val/angle_error_val': angle_error_meter.avg,
+        'val/emo_accuracy_val': accuracy_meter.avg,
     })
 
     elapsed = time.time() - start

@@ -9,7 +9,7 @@ dataset:
   std: [ 0.229, 0.224, 0.225 ]  # RGB
   transform:
     train:
-      horizontal_flip: False
+      horizontal_flip: True
       resize: 224
     val:
       resize: 224
@@ -19,16 +19,16 @@ dataset:
 model:
   name: gaze_emotion
   backbone:
-    name: tf_efficientnet_b2
-    pretrained: tf_efficientnet_b2
+    name: resnet18
 
 train:
   val_first: False
-  emo_pretrained: True
+  emo_pretrained: False
+  gaze_pretrained: True
   resume_path: False
   wandb: True
   batch_size: 32
-  optimizer: adam
+  optimizer: sgd
   base_lr: 0.001
   momentum: 0.9
   nesterov: True

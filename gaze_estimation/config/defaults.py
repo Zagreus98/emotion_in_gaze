@@ -41,6 +41,7 @@ config.train = ConfigNode()
 config.train.batch_size = 64
 config.train.val_indices = [0]
 config.train.emo_pretrained = False
+config.train.gaze_pretrained = False
 config.train.resume_path = None
 config.train.wandb = True
 # optimizer (options: sgd, adam, amsgrad)

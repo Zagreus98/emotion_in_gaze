@@ -1,6 +1,6 @@
 from torch.utils.data import Dataset
 import pathlib
-from PIL import Image
+from PIL import Image, ImageOps
 import pandas as pd
 import numpy as np
 import torch
@@ -26,6 +26,9 @@ class RafDataset(Dataset):
     def get_image(self, img_name):
         img_path = pathlib.Path.joinpath(self.raf_path, 'aligned', img_name)
         img = Image.open(img_path).convert('RGB')
+        # TODO: move this to transforms in the future
+        if self.random_horizontal_flip and np.random.rand() < 0.5:
+            img = ImageOps.mirror(img)
         if self.transform is not None:
             img = self.transform(img)
         return img
@@ -53,8 +56,6 @@ class RafDataset(Dataset):
         img_name = self.dataset.iloc[idx, 0]
         emotion = torch.Tensor([self.raf2affect[self.dataset.iloc[idx, 1]]]).to(torch.int64)
         image = self.get_image(img_name)
-        if self.random_horizontal_flip and np.random.rand() < 0.5:
-            image = image[:, ::-1]
         gaze = torch.Tensor([0, 0, 0])  # (ignore flag , [pitch, yaw])
 
         return image, gaze, emotion

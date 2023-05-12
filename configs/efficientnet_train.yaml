@@ -48,8 +48,8 @@ train:
     num_workers: 2
     pin_memory: False
   task_weights:
-    gaze: 0.7
-    emotion: 0.3
+    gaze: 0.3
+    emotion: 0.7
 
 scheduler:
   epochs: 15

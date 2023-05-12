@@ -163,7 +163,8 @@ def main():
         wandb.init(project='Emotion_in_gaze', entity='2neurons')
     else:
         wandb.init(mode="disabled")
-    wandb.run.name = config.train.output_dir.split('\\')[-1]
+    separator = os.sep
+    wandb.run.name = config.train.output_dir.split(separator)[-1]
     wandb.config.update(config)
 
     set_seeds(config.train.seed)

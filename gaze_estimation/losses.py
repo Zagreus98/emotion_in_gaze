@@ -24,7 +24,6 @@ class TotalLoss(nn.Module):
             raise ValueError
 
     def forward(self, pred_gazes, pred_emotions, grd_gazes, grd_emotions):
-        batch_size = pred_gazes.shape[0]
         weights = self.config.train.task_weights
         # compute emotional damage
         e_loss = self.emotion_loss(pred_emotions, grd_emotions)
@@ -34,7 +33,11 @@ class TotalLoss(nn.Module):
         # compute gaze loss
         g_loss = self.gaze_loss(pred_gazes, grd_gazes[:, 1:])  # compute metric
         g_loss *= grd_gazes[:, 0].unsqueeze(1)  # multiply with ignore flags
-        g_loss = torch.sum(g_loss) / batch_size
+        nr_of_non_zero_elem = torch.count_nonzero(g_loss)
+        if nr_of_non_zero_elem > 0:
+            g_loss = torch.sum(g_loss) / nr_of_non_zero_elem
+        else:
+            g_loss = torch.tensor(0.0)
 
         total_loss = weights['emotion'] * e_loss + weights['gaze'] * g_loss
 

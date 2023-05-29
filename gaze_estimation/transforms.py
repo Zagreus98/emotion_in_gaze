@@ -43,7 +43,6 @@ def create_rafdb_tranform(config: yacs.config.CfgNode, stage: str) -> Any:
 
     if stage == 'train':
         transforms = T.Compose([
-            T.RandomHorizontalFlip(),
             T.Resize(transform_config.resize),
             T.ToTensor(),
             T.Normalize(mean, std, inplace=False),

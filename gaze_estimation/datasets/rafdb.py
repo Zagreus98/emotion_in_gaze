@@ -13,14 +13,29 @@ class RafDataset(Dataset):
         self.mode = mode
         self.dataset = self.get_rafdb()
         self.random_horizontal_flip = False
+        ## rafdb emo dict
+        # emo_dict = {0: 'Surprise',
+        #             1: 'Fear',
+        #             2: 'Disgust',
+        #             3: 'Happy',
+        #             4: 'Sad',
+        #             5: 'Angry',
+        #             6: 'Neutral'}
+
+        ## affectnet emo dict
+        # emo_dict = {0: 'Anger', 1: 'Disgust',
+        #                 2: 'Fear', 3: 'Happiness',
+        #                 4: 'Neutral', 5: 'Sadness',
+        #                 6: 'Surprise'}
+
         self.raf2affect = {
-            0: 6,  # anger
-            1: 2,  # disgust
-            2: 1,  # fear
-            3: 3,  # happiness
-            4: 5,  # neutral
-            5: 0,  # sadness
-            6: 4,  # surprise
+            0: 6,
+            1: 2,
+            2: 1,
+            3: 3,
+            4: 5,
+            5: 0,
+            6: 4,
         }
 
     def get_image(self, img_name):
@@ -56,7 +71,7 @@ class RafDataset(Dataset):
         img_name = self.dataset.iloc[idx, 0]
         emotion = torch.Tensor([self.raf2affect[self.dataset.iloc[idx, 1]]]).to(torch.int64)
         image = self.get_image(img_name)
-        gaze = torch.Tensor([0, 0, 0])  # (ignore flag , [pitch, yaw])
+        gaze = torch.Tensor([0.0, 0.0, 0.0])  # (ignore flag , [pitch, yaw])
 
         return image, gaze, emotion
 

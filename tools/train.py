@@ -57,7 +57,7 @@ def train(epoch, model, optimizer, scheduler, loss_function, train_loader, confi
 
         loss, e_loss, g_loss = loss_function(pred_gazes, pred_emotions, grd_gazes, grd_emotions.squeeze(1))
         loss.backward()
-
+        # torch.nn.utils.clip_grad_norm(model.parameters(), max_norm=2.0, norm_type=2)
         optimizer.step()
         good_pred_gazes, good_grd_gazes, good_pred_emotions, good_grd_emotions = prepare_preds_grds(
             pred_gazes,
@@ -160,12 +160,16 @@ def main():
     config = get_default_config()
     config.merge_from_file(path_config)
     if config.train.wandb:
-        wandb.init(project='Emotion_in_gaze', entity='2neurons')
+        if config.train.resume_path:
+            #TODO: make the id configurable
+            wandb.init(project='Emotion_in_gaze', entity='2neurons', id='0b40q14z', resume="must")
+        else:
+            wandb.init(project='Emotion_in_gaze', entity='2neurons')
+            separator = os.sep
+            wandb.run.name = config.train.output_dir.split(separator)[-1]
+            wandb.config.update(config)
     else:
         wandb.init(mode="disabled")
-    separator = os.sep
-    wandb.run.name = config.train.output_dir.split(separator)[-1]
-    wandb.config.update(config)
 
     set_seeds(config.train.seed)
     setup_cudnn(config)
@@ -190,6 +194,13 @@ def main():
     loss_function = TotalLoss(config)
     optimizer = create_optimizer(config, model)
     scheduler = create_scheduler(config, optimizer)
+    start_epoch = 1
+    if config.train.resume_path:
+        state_dict = torch.load(config.train.resume_path, map_location='cpu')
+        model.load_state_dict(state_dict['model'])
+        optimizer.load_state_dict(state_dict['optimizer'])
+        scheduler.load_state_dict(state_dict['scheduler'])
+        start_epoch = state_dict['epoch'] + 1
     checkpointer = Checkpointer(
         model,
         optimizer=optimizer,
@@ -201,7 +212,7 @@ def main():
     if config.train.val_first:
         validate(0, model, loss_function, val_loader, config, logger)
 
-    for epoch in range(1, config.scheduler.epochs + 1):
+    for epoch in range(start_epoch, config.scheduler.epochs + 1):
         train(epoch, model, optimizer, scheduler, loss_function, train_loader, config, logger)
         scheduler.step()
 

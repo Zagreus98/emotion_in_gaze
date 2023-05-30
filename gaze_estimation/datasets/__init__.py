@@ -8,6 +8,7 @@ from torch.utils.data import Dataset, ConcatDataset
 from ..transforms import create_xgaze_transform, create_rafdb_tranform
 from .rafdb import RafDataset
 from .ethxgaze import OnePersonDataset
+from .fer2013 import FerDataset
 
 
 def create_dataset(
@@ -17,8 +18,10 @@ def create_dataset(
     # Initialize dataset paths
     dataset_dir = pathlib.Path(config.dataset.dataset_dir)
     raf_dir = pathlib.Path(config.dataset.raf_dataset_path)
+    fer_dir = pathlib.Path(config.dataset.fer_dataset_path)
     assert dataset_dir.exists()
     assert raf_dir.exists()
+    assert fer_dir.exists()
 
     train_dataset = []
     val_dataset = []
@@ -50,15 +53,21 @@ def create_dataset(
         for i, path in enumerate(train_paths)
         if i not in val_indices
     ]
-    emotion_train_dataset = RafDataset(
+    rafdb_train_dataset = RafDataset(
         raf_path=raf_dir,
         transform=emo_train_transfrom,
         mode='train',
     )
-    train_dataset.append(emotion_train_dataset)
+    fer_train_dataset = FerDataset(
+        fer_path=fer_dir,
+        transform=gaze_train_transform,
+        mode='train',
+    )
+    train_dataset.append(rafdb_train_dataset)
+    train_dataset.append(fer_train_dataset)
     train_dataset.extend(gaze_train_datasets)
     for i, dataset in enumerate(train_dataset):
-        if i == 0:
+        if i in [0, 1]:
             weight = 10 / len(dataset)  # TODO: add a hyperparameter for this
         else:
             weight = 1 / len(dataset)

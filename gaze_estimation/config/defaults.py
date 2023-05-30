@@ -7,7 +7,8 @@ config.mode = 'ETHXGaze'
 
 config.dataset = ConfigNode()
 config.dataset.dataset_dir = 'datasets/MPIIFaceGaze.h5'
-config.dataset.raf_dataset_path = 'D:\datasets\RafDB'
+config.dataset.raf_dataset_path = r'D:\datasets\RafDB'
+config.dataset.fer_dataset_path = r'D:\datasets\fer2013_superresolution'
 config.dataset.image_size = 224
 config.dataset.n_channels = 3
 config.dataset.mean = [0.485, 0.456, 0.406]

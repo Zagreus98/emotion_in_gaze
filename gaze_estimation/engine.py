@@ -6,9 +6,6 @@ import yacs.config
 
 def create_model(config: yacs.config.CfgNode) -> torch.nn.Module:
     model = GazeEmotion(config)
-    if config.train.resume_path:
-        state_dict = torch.load(config.train.resume_path, map_location='cpu')
-        model.load_state_dict(state_dict['model'])
     # if config.train.emo_pretrained:
     #     set_parameter_requires_grad(model, requires_grad=False)
     #     set_parameter_requires_grad(model.gaze_regressor, requires_grad=True)

@@ -21,7 +21,7 @@ def create_dataloader(
         batch_size=config.train.batch_size,
         num_workers=config.train.train_dataloader.num_workers,
         sampler=data_sampler,
-        pin_memory=True,
+        pin_memory=config.train.train_dataloader.pin_memory,
 
     )
     val_loader = DataLoader(
@@ -29,6 +29,6 @@ def create_dataloader(
         batch_size=config.train.batch_size,
         shuffle=False,
         num_workers=config.train.val_dataloader.num_workers,
-        pin_memory=True,
+        pin_memory=config.train.val_dataloader.pin_memory,
     )
     return train_loader, val_loader

@@ -3,6 +3,7 @@ device: cuda
 dataset:
   dataset_dir: D:\datasets\xgaze_224
   raf_dataset_path: D:\datasets\RafDB
+  fer_dataset_path: D:\datasets\fer2013_superresolution
   image_size: 224
   n_channels: 3
   mean: [ 0.485, 0.456, 0.406 ]  # RGB
@@ -19,12 +20,12 @@ dataset:
 model:
   name: gaze_emotion
   backbone:
-    name: resnet18
+    name: tf_efficientnet_b0_ns # resnet18, tf_efficientnet_b2
 
 train:
   val_first: False
   emo_pretrained: False
-  gaze_pretrained: True
+  gaze_pretrained: False
   resume_path: False
   wandb: True
   batch_size: 32
@@ -34,15 +35,15 @@ train:
   nesterov: True
   weight_decay: 0.0001
   no_weight_decay_on_bn: False
-  loss: L1
+  loss: SmoothL1
   seed: 0
-  output_dir: D:\emotion_in_gaze\experiments\effnet\exp02
+  output_dir: D:\emotion_in_gaze\experiments\effnet\exp21_efficinetb0_from_scratch
   log_period: 100
-  checkpoint_period: 3
+  checkpoint_period: 1
   val_indices: [0, 1, 2]
   train_dataloader:
     num_workers: 2
-    drop_last: True
+    drop_last: False
     pin_memory: False
   val_dataloader:
     num_workers: 2
@@ -52,11 +53,11 @@ train:
     emotion: 0.7
 
 scheduler:
-  epochs: 15
-  type: multistep
-  milestones: [8, 10]
+  epochs: 25
+  type: cosine
+  milestones: [8, 15]
   lr_decay: 0.1
-  lr_min_factor: 0.001
+  lr_min_factor: 0.00001
 
 cudnn:
   benchmark: True

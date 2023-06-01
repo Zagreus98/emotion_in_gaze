@@ -50,20 +50,20 @@ class GazeEmotion(torch.nn.Module):
             self.emotion_classifier = nn.Sequential(nn.Linear(in_features=self.num_features, out_features=7))
             # self._register_hook()
         else:
-            self.model = timm.create_model(
-                config.model.backbone.name,
-                pretrained=True,
-                num_classes=7,
-            )
-            # self.model = torch.load(r'D:\models\enet_b0_7.pt', map_location='cpu')
+            # self.model = timm.create_model(
+            #     config.model.backbone.name,
+            #     pretrained=True,
+            #     num_classes=7,
+            # )
+            self.model = torch.load(r'D:\models\enet_b0_7.pt', map_location='cpu')
             self.emotion_classifier = nn.Sequential(self.model.classifier)
             self.num_features = self.model.num_features
             self.gaze_regressor = nn.Sequential(nn.Linear(in_features=self.num_features, out_features=2))
-            # self.conv = nn.Conv2d(self.num_features,
-            #                       1,
-            #                       kernel_size=1,
-            #                       stride=1,
-            #                       padding=0)
+            self.conv = nn.Conv2d(self.num_features,
+                                  1,
+                                  kernel_size=1,
+                                  stride=1,
+                                  padding=0)
             # self._register_hook()
 
     def _register_hook(self):

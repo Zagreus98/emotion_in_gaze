@@ -9,8 +9,12 @@ class TotalLoss(nn.Module):
     def __init__(self, config: yacs.config.CfgNode):
         super().__init__()
         self.config = config
-        # TODO: make label_smoothing cnfigurable
-        self.emotion_loss = nn.CrossEntropyLoss(reduction="mean", ignore_index=-1, label_smoothing=0.3)
+        self.emotion_loss = nn.CrossEntropyLoss(
+            reduction="mean",
+            ignore_index=-1,
+            label_smoothing=config.train.label_smoothing,
+            weight=config.train.class_weights,
+        )
         self.gaze_loss = self.create_gaze_loss()
 
     def create_gaze_loss(self) -> nn.Module:

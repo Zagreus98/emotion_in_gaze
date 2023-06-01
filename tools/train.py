@@ -17,6 +17,7 @@ from gaze_estimation.utils import (
     save_config, set_seeds, setup_cudnn
 )
 import os
+from torchmetrics.classification import MulticlassAccuracy
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 
@@ -109,7 +110,7 @@ def validate(epoch, model, loss_function, val_loader, config, logger):
     model.eval()
 
     device = torch.device(config.device)
-
+    multi_class_acc = MulticlassAccuracy(num_classes=7, average=None).to(device)
     loss_meter = AverageMeter()
     angle_error_meter = AverageMeter()
     accuracy_meter = AverageMeter()
@@ -134,6 +135,8 @@ def validate(epoch, model, loss_function, val_loader, config, logger):
             )
             angle_error = compute_angle_error(pred_gazes, grd_gazes[:, 1:]).mean()
             emotion_accuracy = accuracy(pred_emotions, grd_emotions)[0]
+            if good_grd_emotions.nelement() > 0:
+                multi_class_acc.update(good_pred_emotions, good_grd_emotions.reshape(-1))
 
             num = images.size(0)
             loss_meter.update(loss.item(), num)
@@ -144,10 +147,21 @@ def validate(epoch, model, loss_function, val_loader, config, logger):
                 f'loss {loss_meter.avg:.4f} '
                 f'angle error {angle_error_meter.avg:.2f} '
                 f'emo accuracy {accuracy_meter.avg:.2f} ')
+
+    emotion_per_class = multi_class_acc.compute()
+    multi_class_acc.reset()
+
     wandb.log({
         'val/total_loss_epoch_val': loss_meter.avg,
         'val/angle_error_val': angle_error_meter.avg,
         'val/emo_accuracy_val': accuracy_meter.avg,
+        'val/anger_acc': emotion_per_class[0],
+        'val/disgust_acc': emotion_per_class[1],
+        'val/fear_acc': emotion_per_class[2],
+        'val/happy_acc': emotion_per_class[3],
+        'val/neutral_acc': emotion_per_class[4],
+        'val/sad_acc': emotion_per_class[5],
+        'val/surprise_acc': emotion_per_class[6],
     })
 
     elapsed = time.time() - start
@@ -162,7 +176,7 @@ def main():
     if config.train.wandb:
         if config.train.resume_path:
             #TODO: make the id configurable
-            wandb.init(project='Emotion_in_gaze', entity='2neurons', id='0b40q14z', resume="must")
+            wandb.init(project='Emotion_in_gaze', entity='2neurons', id='ADDME', resume="must")
         else:
             wandb.init(project='Emotion_in_gaze', entity='2neurons')
             separator = os.sep

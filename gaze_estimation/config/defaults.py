@@ -54,6 +54,8 @@ config.train.weight_decay = 1e-4
 config.train.no_weight_decay_on_bn = False
 # options: L1, L2, SmoothL1
 config.train.loss = 'L2'
+config.train.class_weights = [1.5, 2, 2, 0.5, 0.8, 1, 1]
+config.train.label_smoothing = 0.2
 config.train.seed = 0
 config.train.val_first = True
 config.train.val_period = 1

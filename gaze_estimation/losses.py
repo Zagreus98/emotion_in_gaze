@@ -8,12 +8,13 @@ from .types import LossType
 class TotalLoss(nn.Module):
     def __init__(self, config: yacs.config.CfgNode):
         super().__init__()
+        class_weights = torch.Tensor(config.train.class_weights).to(torch.device(config.device))
         self.config = config
         self.emotion_loss = nn.CrossEntropyLoss(
             reduction="mean",
             ignore_index=-1,
             label_smoothing=config.train.label_smoothing,
-            weight=config.train.class_weights,
+            weight=class_weights,
         )
         self.gaze_loss = self.create_gaze_loss()
 

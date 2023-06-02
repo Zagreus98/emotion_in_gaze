@@ -25,12 +25,12 @@ dataset:
 model:
   name: gaze_emotion
   backbone:
-    name: tf_efficientnet_b0_ns # resnet18, tf_efficientnet_b2
+    name: resnet18 # resnet18, tf_efficientnet_b2
 
 train:
   val_first: False
-  emo_pretrained: True
-  gaze_pretrained: False
+  emo_pretrained: False
+  gaze_pretrained: True
   resume_path: False
   wandb: True
   batch_size: 32
@@ -45,7 +45,7 @@ train:
   label_smoothing: 0.3
   loss: SmoothL1
   seed: 42
-  output_dir: D:\emotion_in_gaze\experiments\effnet\exp23_efficinetb0_color_jitter
+  output_dir: D:\emotion_in_gaze\experiments\effnet\exp24_resnet18_injected_gaze
   log_period: 100
   checkpoint_period: 1
   val_indices: [0, 1, 2]
@@ -57,11 +57,11 @@ train:
     num_workers: 4
     pin_memory: False
   task_weights:
-    gaze: 0.7
-    emotion: 0.3
+    gaze: 0.2
+    emotion: 0.8
 
 scheduler:
-  epochs: 18
+  epochs: 25
   type: cosine
   milestones: [8, 15]
   lr_decay: 0.1

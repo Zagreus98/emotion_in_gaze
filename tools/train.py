@@ -155,13 +155,13 @@ def validate(epoch, model, loss_function, val_loader, config, logger):
         'val/total_loss_epoch_val': loss_meter.avg,
         'val/angle_error_val': angle_error_meter.avg,
         'val/emo_accuracy_val': accuracy_meter.avg,
-        'val/anger_acc': 100 * emotion_per_class[0],
-        'val/disgust_acc': 100 * emotion_per_class[1],
-        'val/fear_acc': 100 * emotion_per_class[2],
-        'val/happy_acc': 100 * emotion_per_class[3],
-        'val/neutral_acc': 100 * emotion_per_class[4],
-        'val/sad_acc': 100 * emotion_per_class[5],
-        'val/surprise_acc': 100 * emotion_per_class[6],
+        'val_emo/anger_acc': 100 * emotion_per_class[0],
+        'val_emo/disgust_acc': 100 * emotion_per_class[1],
+        'val_emo/fear_acc': 100 * emotion_per_class[2],
+        'val_emo/happy_acc': 100 * emotion_per_class[3],
+        'val_emo/neutral_acc': 100 * emotion_per_class[4],
+        'val_emo/sad_acc': 100 * emotion_per_class[5],
+        'val_emo/surprise_acc': 100 * emotion_per_class[6],
     })
 
     elapsed = time.time() - start

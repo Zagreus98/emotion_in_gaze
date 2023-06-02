@@ -47,7 +47,7 @@ class GazeEmotion(torch.nn.Module):
             #                       kernel_size=1,
             #                       stride=1,
             #                       padding=0)
-            self.emotion_classifier = nn.Sequential(nn.Linear(in_features=self.num_features, out_features=7))
+            self.emotion_classifier = nn.Sequential(nn.Linear(in_features=self.num_features + 2, out_features=7))
             # self._register_hook()
         else:
             # self.model = timm.create_model(
@@ -82,5 +82,6 @@ class GazeEmotion(torch.nn.Module):
         # features = features * attention_map
         # features = self.model.global_pool(features)
         gaze = self.gaze_regressor(features)
+        features = torch.cat([features, gaze], dim=1)
         emotion = self.emotion_classifier(features)
         return gaze, emotion

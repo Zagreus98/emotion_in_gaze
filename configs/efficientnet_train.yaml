@@ -12,6 +12,11 @@ dataset:
     train:
       horizontal_flip: True
       resize: 224
+      color_jitter:
+        brightness: [0.4, 1.5]
+        contrast: [0.5, 1.5]
+        saturation: [0.6, 1.3]
+        hue: [0.0, 0.0]
     val:
       resize: 224
     test:
@@ -35,11 +40,12 @@ train:
   nesterov: True
   weight_decay: 0.0001
   no_weight_decay_on_bn: False
-  class_weights: [1.2, 2, 2, 0.5, 0.8, 1, 1]
-  label_smoothing: 0.2
+  # class weights: anger, disgust, fear, happy, neutral, sad, surprise
+  class_weights: [1.2, 2, 3, 0.5, 0.8, 1, 1]
+  label_smoothing: 0.3
   loss: SmoothL1
-  seed: 0
-  output_dir: D:\emotion_in_gaze\experiments\effnet\exp22_efficinetb0_classweights
+  seed: 42
+  output_dir: D:\emotion_in_gaze\experiments\effnet\exp23_efficinetb0_color_jitter
   log_period: 100
   checkpoint_period: 1
   val_indices: [0, 1, 2]
@@ -55,7 +61,7 @@ train:
     emotion: 0.3
 
 scheduler:
-  epochs: 25
+  epochs: 18
   type: cosine
   milestones: [8, 15]
   lr_decay: 0.1

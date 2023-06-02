@@ -59,11 +59,11 @@ class GazeEmotion(torch.nn.Module):
             self.emotion_classifier = nn.Sequential(self.model.classifier)
             self.num_features = self.model.num_features
             self.gaze_regressor = nn.Sequential(nn.Linear(in_features=self.num_features, out_features=2))
-            self.conv = nn.Conv2d(self.num_features,
-                                  1,
-                                  kernel_size=1,
-                                  stride=1,
-                                  padding=0)
+            # self.conv = nn.Conv2d(self.num_features,
+            #                       1,
+            #                       kernel_size=1,
+            #                       stride=1,
+            #                       padding=0)
             # self._register_hook()
 
     def _register_hook(self):

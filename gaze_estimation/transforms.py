@@ -44,9 +44,13 @@ def create_rafdb_tranform(config: yacs.config.CfgNode, stage: str) -> Any:
     if stage == 'train':
         transforms = T.Compose([
             T.Resize(transform_config.resize),
+            T.ColorJitter(brightness=transform_config.color_jitter.brightness,
+                          contrast=transform_config.color_jitter.contrast,
+                          saturation=transform_config.color_jitter.saturation,
+                          hue=transform_config.color_jitter.hue),
             T.ToTensor(),
             T.Normalize(mean, std, inplace=False),
-            T.RandomErasing(scale=(0.02, 0.25))
+            T.RandomErasing(scale=(0.02, 0.25)),
         ])
     else:
         transforms = T.Compose([

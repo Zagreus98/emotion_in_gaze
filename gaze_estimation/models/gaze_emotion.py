@@ -82,6 +82,6 @@ class GazeEmotion(torch.nn.Module):
         # features = features * attention_map
         # features = self.model.global_pool(features)
         gaze = self.gaze_regressor(features)
-        features = torch.cat([features, gaze], dim=1)
+        features = torch.cat([features, gaze.detach()], dim=1)
         emotion = self.emotion_classifier(features)
         return gaze, emotion

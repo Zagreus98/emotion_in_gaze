@@ -7,7 +7,8 @@ config.mode = 'ETHXGaze'
 
 config.dataset = ConfigNode()
 config.dataset.dataset_dir = 'datasets/MPIIFaceGaze.h5'
-config.dataset.raf_dataset_path = 'D:\datasets\RafDB'
+config.dataset.raf_dataset_path = r'D:\datasets\RafDB'
+config.dataset.fer_dataset_path = r'D:\datasets\fer2013_superresolution'
 config.dataset.image_size = 224
 config.dataset.n_channels = 3
 config.dataset.mean = [0.485, 0.456, 0.406]
@@ -16,6 +17,11 @@ config.dataset.transform = ConfigNode()
 config.dataset.transform.train = ConfigNode()
 config.dataset.transform.train.horizontal_flip = False
 config.dataset.transform.train.resize = 224
+config.dataset.transform.train.color_jitter = ConfigNode()
+config.dataset.transform.train.color_jitter.brightness = [0.4, 1.5]
+config.dataset.transform.train.color_jitter.contrast = [0.5, 1.5]
+config.dataset.transform.train.color_jitter.saturation = [0.6, 1.3]
+config.dataset.transform.train.color_jitter.hue = [0.0, 0.0]
 config.dataset.transform.val = ConfigNode()
 config.dataset.transform.val.resize = 224
 config.dataset.transform.test = ConfigNode()
@@ -41,7 +47,9 @@ config.train = ConfigNode()
 config.train.batch_size = 64
 config.train.val_indices = [0]
 config.train.emo_pretrained = False
+config.train.gaze_pretrained = False
 config.train.resume_path = None
+config.train.wandb = True
 # optimizer (options: sgd, adam, amsgrad)
 config.train.optimizer = 'adam'
 config.train.base_lr = 0.01
@@ -51,22 +59,20 @@ config.train.weight_decay = 1e-4
 config.train.no_weight_decay_on_bn = False
 # options: L1, L2, SmoothL1
 config.train.loss = 'L2'
+config.train.class_weights = [1.5, 2, 2, 0.5, 0.8, 1, 1]
+config.train.label_smoothing = 0.2
 config.train.seed = 0
 config.train.val_first = True
 config.train.val_period = 1
 
-config.train.test_id = 0
-config.train.val_ratio = 0.1
-
-config.train.output_dir = 'experiments/mpiigaze/exp00'
+config.train.output_dir = 'experiments/gaze_emo/exp00'
 config.train.log_period = 100
-config.train.checkpoint_period = 10
+config.train.checkpoint_period = 2
 
-config.train.use_tensorboard = True
-config.tensorboard = ConfigNode()
-config.tensorboard.train_images = False
-config.tensorboard.val_images = False
-config.tensorboard.model_params = False
+# config.tensorboard = ConfigNode()
+# config.tensorboard.train_images = False
+# config.tensorboard.val_images = False
+# config.tensorboard.model_params = False
 
 # optimizer
 config.optim = ConfigNode()
@@ -108,19 +114,6 @@ config.test.batch_size = 256
 config.test.dataloader = ConfigNode()
 config.test.dataloader.num_workers = 2
 config.test.dataloader.pin_memory = False
-
-# Face detector
-config.face_detector = ConfigNode()
-config.face_detector.mode = 'dlib'
-config.face_detector.dlib = ConfigNode()
-config.face_detector.dlib.model = 'data/dlib/shape_predictor_68_face_landmarks.dat'
-
-# Gaze estimator
-config.gaze_estimator = ConfigNode()
-config.gaze_estimator.checkpoint = ''
-config.gaze_estimator.camera_params = ''
-config.gaze_estimator.normalized_camera_params = 'data/calib/normalized_camera_params_eye.yaml'
-config.gaze_estimator.normalized_camera_distance = 0.6
 
 # cuDNN
 config.cudnn = ConfigNode()

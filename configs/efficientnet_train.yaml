@@ -1,16 +1,22 @@
-mode: ETHXGaze
+mode: emo_in_gaze
 device: cuda
 dataset:
   dataset_dir: D:\datasets\xgaze_224
   raf_dataset_path: D:\datasets\RafDB
+  fer_dataset_path: D:\datasets\fer2013_superresolution
   image_size: 224
   n_channels: 3
   mean: [ 0.485, 0.456, 0.406 ]  # RGB
   std: [ 0.229, 0.224, 0.225 ]  # RGB
   transform:
     train:
-      horizontal_flip: False
+      horizontal_flip: True
       resize: 224
+      color_jitter:
+        brightness: [0.4, 1.5]
+        contrast: [0.5, 1.5]
+        saturation: [0.6, 1.3]
+        hue: [0.0, 0.0]
     val:
       resize: 224
     test:
@@ -19,44 +25,47 @@ dataset:
 model:
   name: gaze_emotion
   backbone:
-    name: tf_efficientnet_b2
-    pretrained: tf_efficientnet_b2
+    name: tf_efficientnet_b0_ns # resnet18, tf_efficientnet_b2
 
 train:
   val_first: False
   emo_pretrained: True
+  gaze_pretrained: False
   resume_path: False
+  wandb: True
   batch_size: 32
-  optimizer: adam
+  optimizer: sgd
   base_lr: 0.001
   momentum: 0.9
   nesterov: True
   weight_decay: 0.0001
   no_weight_decay_on_bn: False
-  loss: L1
-  seed: 0
-  output_dir: D:\emotion_in_gaze\experiments\effnet\exp01
+  # class weights: anger, disgust, fear, happy, neutral, sad, surprise
+  class_weights: [1.2, 2, 3, 0.5, 0.8, 1, 1]
+  label_smoothing: 0.3
+  loss: SmoothL1
+  seed: 42
+  output_dir: D:\emotion_in_gaze\experiments\effnet\exp23_efficinetb0_color_jitter
   log_period: 100
-  checkpoint_period: 3
-  use_tensorboard: False
+  checkpoint_period: 1
   val_indices: [0, 1, 2]
   train_dataloader:
-    num_workers: 2
-    drop_last: True
+    num_workers: 4
+    drop_last: False
     pin_memory: False
   val_dataloader:
-    num_workers: 2
+    num_workers: 4
     pin_memory: False
   task_weights:
     gaze: 0.7
     emotion: 0.3
 
 scheduler:
-  epochs: 15
-  type: multistep
-  milestones: [10, 13]
+  epochs: 18
+  type: cosine
+  milestones: [8, 15]
   lr_decay: 0.1
-  lr_min_factor: 0.001
+  lr_min_factor: 0.00001
 
 cudnn:
   benchmark: True

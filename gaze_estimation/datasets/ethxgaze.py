@@ -33,7 +33,7 @@ class OnePersonDataset(torch.utils.data.Dataset):
         image = image[..., ::-1]  # BGR to RGB
         image = self.transform(image)
         # insert ignore flag
-        gaze = np.insert(gaze, obj=0, values=1)
+        gaze = np.insert(gaze, obj=0, values=1.0)
         gaze = torch.from_numpy(gaze)  # (ignore flag , [pitch, yaw])
         emotion = torch.Tensor([-1]).to(torch.int64)  # ignore class
         return image, gaze, emotion

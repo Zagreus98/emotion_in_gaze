@@ -3,10 +3,11 @@ torchvision
 numpy
 opencv-python
 tqdm
+timm
 yacs
 scipy
 wandb
 omegaconf
 fvcore
 pandas
-
+matplotlib

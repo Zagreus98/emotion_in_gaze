@@ -11,3 +11,4 @@ omegaconf
 fvcore
 pandas
 matplotlib
+torchmetrics

@@ -1,12 +1,10 @@
-# emotion_in_gaze
-Training code for the emotion_in_gaze model.
+# Emotion in gaze trainer
+- **Author:** Andrei Alexandru
+- **Faculty:** Faculty of Electronics, Telecommunications and Information Technology
+- **Master program:** TAID
 
-TODO:
-  - Create a common data format for gaze and emotion datasets
-  - Create a dataloader which takes into consideration from which dataset the image is
-  - Define transforms
-  - Train loop/validation loop
-  - Implement total loss for gaze and emotion classification
-    - If data from xgaze: semi-supervized loss for classification + Gaze_loss
-    - If data from rafdb: semi-supervized loss for regression (will be 0 for the moment, research in progress) + Classification loss
+This code implements a trainer for a multi-task network which performs gaze estimation
+and emotion classification. It was developed for my Dissertation project.
+
+
     

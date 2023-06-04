@@ -31,7 +31,7 @@ class TotalLoss(nn.Module):
 
     def forward(self, pred_gazes, pred_emotions, grd_gazes, grd_emotions):
         weights = self.config.train.task_weights
-        # compute emotional damage
+        # compute emotion classification loss
         e_loss = self.emotion_loss(pred_emotions, grd_emotions)
         if torch.isnan(e_loss):
             e_loss = torch.tensor(0.0)
@@ -41,7 +41,7 @@ class TotalLoss(nn.Module):
         g_loss *= grd_gazes[:, 0].unsqueeze(1)  # multiply with ignore flags
         nr_of_non_zero_elem = torch.sum(grd_gazes[:, 0])
         if nr_of_non_zero_elem > 0:
-            g_loss = torch.sum(g_loss) / nr_of_non_zero_elem
+            g_loss = torch.sum(g_loss) / 2 * nr_of_non_zero_elem
         else:
             g_loss = torch.tensor(0.0)
 

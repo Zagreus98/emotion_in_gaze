@@ -39,9 +39,9 @@ class TotalLoss(nn.Module):
         # compute gaze loss
         g_loss = self.gaze_loss(pred_gazes, grd_gazes[:, 1:])  # compute metric
         g_loss *= grd_gazes[:, 0].unsqueeze(1)  # multiply with ignore flags
-        nr_of_non_zero_elem = torch.sum(grd_gazes[:, 0])
+        nr_of_non_zero_elem = torch.sum(grd_gazes[:, 0]) * 2
         if nr_of_non_zero_elem > 0:
-            g_loss = torch.sum(g_loss) / 2 * nr_of_non_zero_elem
+            g_loss = torch.sum(g_loss) / nr_of_non_zero_elem
         else:
             g_loss = torch.tensor(0.0)
 

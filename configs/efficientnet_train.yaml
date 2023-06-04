@@ -32,7 +32,7 @@ train:
   emo_pretrained: False
   gaze_pretrained: True
   resume_path: False
-  wandb: True
+  wandb: False
   batch_size: 32
   optimizer: sgd
   base_lr: 0.001
@@ -41,7 +41,7 @@ train:
   weight_decay: 0.0001
   no_weight_decay_on_bn: False
   # class weights: anger, disgust, fear, happy, neutral, sad, surprise
-  class_weights: [1.2, 2, 3, 0.5, 0.5, 1, 1]
+  class_weights: [1.2, 2.0, 3.0, 0.5, 0.5, 1, 1]
   label_smoothing: 0.3
   loss: SmoothL1
   seed: 42

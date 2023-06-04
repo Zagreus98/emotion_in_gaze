@@ -41,11 +41,11 @@ train:
   weight_decay: 0.0001
   no_weight_decay_on_bn: False
   # class weights: anger, disgust, fear, happy, neutral, sad, surprise
-  class_weights: [1.2, 2, 3, 0.5, 0.8, 1, 1]
+  class_weights: [1.2, 2, 3, 0.5, 0.5, 1, 1]
   label_smoothing: 0.3
   loss: SmoothL1
   seed: 42
-  output_dir: D:\emotion_in_gaze\experiments\effnet\exp24_resnet18_injected_gaze
+  output_dir: D:\emotion_in_gaze\experiments\effnet\exp27_resnet18_injected_gaze_fixed_loss
   log_period: 100
   checkpoint_period: 1
   val_indices: [0, 1, 2]
@@ -57,7 +57,7 @@ train:
     num_workers: 4
     pin_memory: False
   task_weights:
-    gaze: 0.35
+    gaze: 0.3
     emotion: 0.7
 
 scheduler:

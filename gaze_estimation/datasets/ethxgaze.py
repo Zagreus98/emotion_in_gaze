@@ -36,7 +36,7 @@ class OnePersonDataset(torch.utils.data.Dataset):
         gaze = np.insert(gaze, obj=0, values=1.0)
         gaze = torch.from_numpy(gaze)  # (ignore flag , [pitch, yaw])
         emotion = torch.Tensor([-1]).to(torch.int64)  # ignore class
-        return image, gaze, emotion
+        return image, gaze.float(), emotion
 
     def __len__(self) -> int:
         return self._length

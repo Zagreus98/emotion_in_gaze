@@ -48,7 +48,3 @@ class TotalLoss(nn.Module):
         total_loss = weights['emotion'] * e_loss + weights['gaze'] * g_loss
 
         return total_loss, e_loss, g_loss
-
-
-
-
